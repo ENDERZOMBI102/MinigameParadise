@@ -4,13 +4,9 @@ version: 1.0.0
 api-version: 1.13
 commands:
    modestart:
-      description: Start a gamemode
-      usage: /modestart <mode> [parameters]
-      permission: MinigameParadise.startGamemode
-   modestop:
-      description: Stops a gamemode
-      usage: /modestop <mode>
-      permission: MinigameParadise.stopGamemode
+      description: Starts/stops a gamemode
+      usage: /mode <start|stop> <mode> [parameters]
+      permission: MinigameParadise.modifyGamemodeState
    listplayers:
       description: list all players
       usage: /listplayers <gamemode> [onlynumber]
