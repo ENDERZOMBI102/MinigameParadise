@@ -2,12 +2,12 @@ package com.enderzombi102.MinigameParadise.modes.deathswap;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import com.enderzombi102.MinigameParadise.MinigameParadise;
@@ -17,25 +17,26 @@ import com.google.common.collect.Lists;
 public class DeathSwap extends ModeBase {
 	
 	public static DeathSwap instance;
-	private int time;
-	private BukkitRunnable timerThread;
+	public boolean allowNether;
+	private final BukkitRunnable timerThread;
 	private ArrayList< ArrayList<Player> > teams = new ArrayList<>();
-	
-	public DeathSwap(int swapTime, boolean hardcore, boolean doImmediateRespawn) {
-		// set singleton
-		DeathSwap.instance = this;
+
+	public DeathSwap(int swapTime, boolean hardcore, boolean allowNether) {
+		// add event listener for this gamemode
+		Bukkit.getPluginManager().registerEvents( new DeathSwapListener(), MinigameParadise.instance );
 		// send mode info
-		broadcastPrefixedMessage("setting DeathSwap mode");
-		this.time = swapTime * 60;
-		broadcastPrefixedMessage("timer: " + this.time / 60 + " minutes");
+		broadcastPrefixedMessage("setting up DeathSwap mode");
+		int time = swapTime * 60;
+		broadcastPrefixedMessage("timer: " + time / 60 + " minutes");
 		// make the teams
 		broadcastPrefixedMessage("making teams");
 		this.makeTeams();
 		// set world
 		broadcastPrefixedMessage("setting up world");
-		setupWorld();
+		this.allowNether = allowNether;
+		setupWorld(hardcore);
 		// start the timer thread
-		this.timerThread = new TimerThread(this.time);
+		this.timerThread = new TimerThread(time);
 		this.timerThread.runTaskTimer(MinigameParadise.instance, 20, 20);
 		broadcastPrefixedMessage("the clock is ticking! timer started!");
 	}
@@ -43,14 +44,7 @@ public class DeathSwap extends ModeBase {
 	private void makeTeams() {
 		ArrayList<Player> players = Lists.newArrayList( Bukkit.getOnlinePlayers() );
 		// remove all players that aren't in survival mode
-		players.removeIf( new Predicate<Player>() {
-
-			@Override
-			public boolean test(Player player) {
-				return player.getGameMode() != GameMode.SURVIVAL;
-			}
-			
-		});
+		players.removeIf( player -> player.getGameMode() != GameMode.SURVIVAL );
 		int teamCount = players.size() / 2, playerIndex = 0;
 		broadcastPrefixedMessage("and now the antagonists!");
 		for (int i=0; i<teamCount;i++) {
@@ -67,44 +61,39 @@ public class DeathSwap extends ModeBase {
 	
 	public void swap() {
 		// cycle in the teams
-		this.teams.forEach( new Consumer< ArrayList<Player> >() {
-
-			@Override
-			public void accept(ArrayList<Player> t) {
-				// swap!
-				t.get(0).sendMessage("swap!");
-				t.get(1).sendMessage("swap!");
-				Location p1 = t.get(0).getLocation();
-				p1.setWorld( t.get(0).getWorld() );
-				Location p2 = t.get(1).getLocation();
-				p2.setWorld( t.get(1).getWorld() );
-				t.get(1).teleport(p1);
-				t.get(0).teleport(p2);
-			}
-			
+		this.teams.forEach(team -> {
+			// swap!
+			team.get(0).sendMessage("swap!");
+			team.get(1).sendMessage("swap!");
+			Location p1 = team.get(0).getLocation();
+			p1.setWorld( team.get(0).getWorld() );
+			Location p2 = team.get(1).getLocation();
+			p2.setWorld( team.get(1).getWorld() );
+			team.get(1).teleport(p1);
+			team.get(0).teleport(p2);
 		});
 	}
 	
-	public void checkWin( Player ent ) {
+	public void checkWin( Player nowDeadPlayer ) {
 		for (ArrayList<Player> team : this.teams ) {
 			
-			if ( team.get(0).equals(ent) ) {
+			if ( team.get(0).equals( nowDeadPlayer ) ) {
 				broadcastPrefixedMessage(team.get(1).getName()+" Wins his SwapBattle!");
-				team.get(0).setGameMode(GameMode.SPECTATOR);
+				team.get(0).setGameMode( GameMode.SPECTATOR );
 				break;
-			} else if ( team.get(1).equals(ent) ) {
+			} else if ( team.get(1).equals( nowDeadPlayer ) ) {
 				broadcastPrefixedMessage(team.get(0).getName()+" Wins his SwapBattle!");
-				team.get(1).setGameMode(GameMode.SPECTATOR);
+				team.get(1).setGameMode( GameMode.SPECTATOR );
 				break;
 			}
 			
 		}
 	}
 
-	private static void setupWorld() {
+	private static void setupWorld( boolean hardcore ) {
 		for ( World world : Bukkit.getWorlds() ) {
 			world.setDifficulty(Difficulty.PEACEFUL);
-			world.setDifficulty(Difficulty.NORMAL);
+			world.setDifficulty(hardcore ? Difficulty.HARD : Difficulty.NORMAL);
 			for ( Entity entity : world.getEntitiesByClasses(Item.class) ) {
 				entity.remove();
 			}
@@ -119,6 +108,7 @@ public class DeathSwap extends ModeBase {
 
 	@Override
 	public void stop() {
+		HandlerList.unregisterAll(DeathSwapListener.instance);
 		this.timerThread.cancel();
 	}
 	
