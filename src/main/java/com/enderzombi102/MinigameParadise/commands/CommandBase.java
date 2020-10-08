@@ -1,5 +1,7 @@
 package com.enderzombi102.MinigameParadise.commands;
 
+import java.io.FileNotFoundException;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -21,10 +23,11 @@ import com.google.common.collect.Iterables;
 public abstract class CommandBase implements TabExecutor {
 	
 	protected abstract String getUsage();
+
 	/**
-     * Executes the given command, returning its success.
+     * Executes this command.
      * <br>
-     * If false is returned, then the "usage" plugin.yml entry for this command
+     * if a WrongUsageException is thrown, the usage text of this command
      * (if defined) will be sent to the player.
      *
      * @param server the server object
@@ -33,22 +36,22 @@ public abstract class CommandBase implements TabExecutor {
      * @param alias Alias of the command which was used
      */
 	public abstract void execute(Server server, CommandSender sender, String[] args, String alias ) throws CommandException;
-	
+
 	@Override
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 		// execute the command
 		try {
 			this.execute(Bukkit.getServer(), sender, args, label);
 		} catch (WrongUsageException e) {
-			sender.sendMessage( this.getUsage() );
+			sender.sendMessage( ChatColor.RED + this.getUsage() );
 		} catch( CommandException e) {
 			// send the error message to the player only if the config says so
 			if  ( MinigameParadise.instance.getConfig().getBoolean("sendCommandErrorMessage") ) {
-				sender.sendMessage(ChatColor.RED+"An error occourred while executing the command:");
-				sender.sendMessage( ChatColor.RED+""+e.getStackTrace() );
+				sender.sendMessage( ChatColor.RED + "An error occurred while executing the command:" );
+				sender.sendMessage( ChatColor.RED + Arrays.toString( e.getStackTrace() ) );
 			}
 			// log the exception
-			LogHelper.Error("Captured error while executing " + this.getClass().getSimpleName() + ".\n" + e.getStackTrace());
+			LogHelper.Error("Captured exception while executing " + this.getClass().getSimpleName() + ".\n" + e.getStackTrace() );
 		}
 		// let spigot handle the rest
 		return true;
@@ -75,11 +78,11 @@ public abstract class CommandBase implements TabExecutor {
 
         if (!possibleCompletions.isEmpty())
         {
-            for (String completition : Iterables.transform(possibleCompletions, Functions.toStringFunction()))
+            for (String completion : Iterables.transform( possibleCompletions, Functions.toStringFunction() ) )
             {
-                if (doesStringStartWith(input, completition))
+                if (doesStringStartWith(input, completion))
                 {
-                    list.add(completition);
+                    list.add(completion);
                 }
             }
         }
