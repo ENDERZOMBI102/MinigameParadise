@@ -1,11 +1,9 @@
 package com.enderzombi102.MinigameParadise;
 
-import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.enderzombi102.MinigameParadise.commands.CommandListPlayers;
 import com.enderzombi102.MinigameParadise.commands.CommandMode;
-import com.enderzombi102.MinigameParadise.modes.deathswap.DeathSwapListener;
 import com.enderzombi102.MinigameParadise.modes.ModeBase;
 
 public class MinigameParadise extends JavaPlugin {
@@ -16,6 +14,7 @@ public class MinigameParadise extends JavaPlugin {
 	public MinigameParadise() {
 		super();
 		MinigameParadise.instance = this;
+		Util.setupLists();
 	}
 	
 	@Override

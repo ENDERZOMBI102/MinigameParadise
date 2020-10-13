@@ -39,7 +39,7 @@ public class CommandMode implements TabExecutor {
 					MinigameParadise.currentMode = new DeathSwap(time, hardcore, allowNether);
 				} else {
 					sender.getServer().broadcastMessage("stopping DeathSwap");
-					//deathswap mode
+					//DeathSwap mode
 					MinigameParadise.currentMode.stop();
 					MinigameParadise.currentMode = null;
 					sender.getServer().broadcastMessage("DeathSwap stopped!");
@@ -50,7 +50,7 @@ public class CommandMode implements TabExecutor {
 					MinigameParadise.currentMode = new BedrockPainter();
 				} else {
 					sender.getServer().broadcastMessage("stopping BedrockPainter");
-					//deathswap mode
+					//BedrockPainter mode
 					MinigameParadise.currentMode.stop();
 					MinigameParadise.currentMode = null;
 					sender.getServer().broadcastMessage("BedrockPainter stopped!");

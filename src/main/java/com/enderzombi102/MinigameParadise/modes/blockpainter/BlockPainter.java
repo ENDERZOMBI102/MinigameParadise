@@ -1,10 +1,8 @@
-package com.enderzombi102.MinigameParadise.modes.bedrockpaint;
+package com.enderzombi102.MinigameParadise.modes.blockpainter;
 
 import com.enderzombi102.MinigameParadise.MinigameParadise;
 import com.enderzombi102.MinigameParadise.Util;
 import com.enderzombi102.MinigameParadise.modes.ModeBase;
-
-import com.google.common.collect.Sets;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -14,14 +12,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
 import java.util.List;
+import java.util.Random;
 
-public class BedrockPainter extends ModeBase {
+public class BlockPainter extends ModeBase {
 
-	private final BedrockPainterListener listener;
+	private final BlockPainterListener listener;
 
-	public BedrockPainter() {
+	public BlockPainter() {
 		broadcastPrefixedMessage("Starting..");
-		this.listener = new BedrockPainterListener();
+		this.listener = new BlockPainterListener();
 		Bukkit.getPluginManager().registerEvents(this.listener , MinigameParadise.instance);
 		broadcastPrefixedMessage("Started!");
 	}
@@ -31,17 +30,22 @@ public class BedrockPainter extends ModeBase {
 		HandlerList.unregisterAll(this.listener);
 	}
 
-	public class BedrockPainterListener implements Listener {
+	public class BlockPainterListener implements Listener {
 
 		@EventHandler
 		public void OnPlayerLook(PlayerMoveEvent evt) {
-			// get the block pointed by the player, ignoring non-solid blocks
-			List<Block> sight = evt.getPlayer().getLineOfSight( Sets.complementOf( Util.unsolid ), 100);
+			// get the block pointed by the player
+			List<Block> sight = evt.getPlayer().getLineOfSight(null, 100);
 			Block block = sight.get( sight.size() - 1 );
-			// is it a solid block?
+			// is a solid block?
 			if (Util.unsolid.contains( block.getType() ) ) {
-				// replace the pointed block with bedrock
-				block.setType( Material.BEDROCK );
+				// yes, get a random block
+				int randID;
+				do {
+					randID = new Random().nextInt(Material.values().length);
+				} while( Material.values()[randID].isItem() || Material.values()[randID] == block.getType() );
+				// replace the pointed block by the one we chosen
+				block.setType( Material.values()[randID] );
 			}
 		}
 	}
