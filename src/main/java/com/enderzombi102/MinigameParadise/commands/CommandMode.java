@@ -119,7 +119,7 @@ public class CommandMode implements TabExecutor {
 	}
 
 	private void stopMode( Class cls ) {
-		Bukkit.broadcastMessage( "stopping " + cls.getSimpleName() );
+		Bukkit.broadcastMessage( "[" + cls.getSimpleName() + "] stopping..");
 		//BedrockPainter mode
 		for (ModeBase mode : MinigameParadise.activeModes) {
 			if ( cls.isInstance( mode ) ) {
@@ -128,6 +128,6 @@ public class CommandMode implements TabExecutor {
 				break;
 			}
 		}
-		Bukkit.broadcastMessage( cls.getSimpleName() + " stopped!" );
+		Bukkit.broadcastMessage( "[" + cls.getSimpleName() + "] stopped!" );
 	}
 }
