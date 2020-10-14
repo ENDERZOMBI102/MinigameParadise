@@ -3,12 +3,12 @@ package com.enderzombi102.MinigameParadise.modes.deathswap;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class TimerThread extends BukkitRunnable {
+public class DeathSwapTimer extends BukkitRunnable {
 	
 	private int time;
 	private int counter = 0;
 
-    public TimerThread(int time) {
+    public DeathSwapTimer(int time) {
     	this.time = time;
     	this.counter = time;
     }

@@ -1,7 +1,9 @@
 package com.enderzombi102.MinigameParadise.modes.dropcalipse;
 
+import com.enderzombi102.MinigameParadise.MinigameParadise;
 import com.enderzombi102.MinigameParadise.modes.ModeBase;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
@@ -16,7 +18,7 @@ import java.util.Random;
 public class Dropcalipse extends ModeBase {
 
 	public static Dropcalipse instance;
-	private DropcalipseListener listener;
+	private final DropcalipseListener listener;
 	public boolean randomDrops;
 	public int maxDrops;
 
@@ -26,13 +28,18 @@ public class Dropcalipse extends ModeBase {
 		this.randomDrops = randomDrops;
 		this.maxDrops = maxDrops;
 		this.listener = new DropcalipseListener();
+		Bukkit.getPluginManager().registerEvents(this.listener , MinigameParadise.instance);
 		broadcastPrefixedMessage("the Dropcalipse is started! good luck!");
 	}
 
 	public ItemStack randomize(Item item) {
 
 		ItemStack itemStack = item.getItemStack();
-		itemStack.setAmount( new Random().nextInt( this.maxDrops ) );
+		int amount;
+		do {
+			amount = new Random().nextInt( this.maxDrops );
+		} while( amount < 10);
+		itemStack.setAmount( amount );
 		if ( this.randomDrops ) {
 			itemStack.setType( Material.values()[ new Random().nextInt( Material.values().length-1 ) ] );
 		}
@@ -49,13 +56,16 @@ public class Dropcalipse extends ModeBase {
 		@EventHandler
 		public void OnBlockDrop(BlockDropItemEvent evt) {
 			for (Item item : evt.getItems()) {
+				Bukkit.broadcastMessage(item.getItemStack().toString());
 				item.setItemStack( randomize(item) );
 			}
 		}
 
 		@EventHandler
 		public void OnEntityDrop(EntityDropItemEvent evt) {
-			evt.getItemDrop().setItemStack( randomize( evt.getItemDrop() ) );
+			Bukkit.broadcastMessage(evt.getItemDrop().getItemStack().toString());
+			ItemStack drop = randomize( evt.getItemDrop() );
+			evt.getItemDrop().setItemStack( drop );
 		}
 	}
 }

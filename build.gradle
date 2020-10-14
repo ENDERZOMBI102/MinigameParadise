@@ -12,14 +12,16 @@ repositories {
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
     maven {
-    	url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+        url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
     }
 }
 
 dependencies {
-	
+
 	compileOnly 'org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT'
 	annotationProcessor 'org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT'
+
+    implementation 'org.spigotmc:spigot-api:1.16.3-R0.1-SNAPSHOT'
 
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     //api 'org.apache.commons:commons-math3:3.6.1'

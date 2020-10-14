@@ -36,7 +36,7 @@ public class BedrockPainter extends ModeBase {
 		@EventHandler
 		public void OnPlayerLook(PlayerMoveEvent evt) {
 			// get the block pointed by the player, ignoring non-solid blocks
-			List<Block> sight = evt.getPlayer().getLineOfSight( Sets.complementOf( Util.unsolid ), 100);
+			List<Block> sight = evt.getPlayer().getLineOfSight( null, 100);
 			Block block = sight.get( sight.size() - 1 );
 			// is it a solid block?
 			if ( Util.solid.contains( block.getType() ) ) {

@@ -37,9 +37,11 @@ public class MinigameParadise extends JavaPlugin {
     // Fired when plugin is disabled
     @Override
     public void onDisable() {
-		for (ModeBase mode : activeModes) {
-			mode.stop();
-			activeModes.remove(mode);
+		if ( activeModes.size() > 0) {
+			for (ModeBase mode : activeModes) {
+				mode.stop();
+			}
+			activeModes.clear();
 		}
     }
 }

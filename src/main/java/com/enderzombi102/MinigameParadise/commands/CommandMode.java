@@ -118,11 +118,13 @@ public class CommandMode implements TabExecutor {
 				comp.add("gravity");
 				comp.add("dropcalipse");
 				break;
-			case 4:
+			case 3:
 				if ( args[1].equals("dropcalipse") ) {
 					comp.add("true");
 					comp.add("false");
 				}
+				break;
+			case 4:
 			case 5:
 				if ( args[1].equals("deathswap") ) {
 					comp.add("true");

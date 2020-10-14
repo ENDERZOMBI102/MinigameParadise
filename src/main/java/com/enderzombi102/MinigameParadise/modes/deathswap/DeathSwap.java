@@ -35,7 +35,7 @@ public class DeathSwap extends ModeBase {
 		this.allowNether = allowNether;
 		setupWorld(hardcore);
 		// start the timer thread
-		this.timerThread = new TimerThread(time);
+		this.timerThread = new DeathSwapTimer(time);
 		this.timerThread.runTaskTimer(MinigameParadise.instance, 20, 20);
 		broadcastPrefixedMessage("the clock is ticking! timer started!");
 	}
