@@ -16,7 +16,7 @@ import com.enderzombi102.MinigameParadise.modes.ModeBase;
 
 public class Gravity extends ModeBase {
 
-	private GravityListener listener;
+	private final GravityListener listener;
 
 
 	public Gravity() {
