@@ -3,6 +3,7 @@ package com.enderzombi102.MinigameParadise.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.enderzombi102.MinigameParadise.modes.dropcalipse.Dropcalipse;
 import com.enderzombi102.MinigameParadise.modes.gravity.Gravity;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -86,6 +87,17 @@ public class CommandMode implements TabExecutor {
 					stopMode( Gravity.class );
 				}
 				return true;
+			case "dropcalipse":
+				if (start) {
+					int maxDrops = 255;
+					boolean randomDrops = false;
+					if (args.length >= 3) maxDrops = Integer.parseInt( args[2] );
+					if (args.length >= 4) randomDrops = Boolean.parseBoolean( args[3] );
+					MinigameParadise.activeModes.add( new Dropcalipse( randomDrops, maxDrops ) );
+				} else {
+					stopMode( Dropcalipse.class );
+				}
+				return true;
 			default:
 				return false;
 		}
@@ -104,12 +116,20 @@ public class CommandMode implements TabExecutor {
 				comp.add("bedrockpainter");
 				comp.add("blockpainter");
 				comp.add("gravity");
+				comp.add("dropcalipse");
 				break;
 			case 4:
+				if ( args[1].equals("dropcalipse") ) {
+					comp.add("true");
+					comp.add("false");
+				}
 			case 5:
 				if ( args[1].equals("deathswap") ) {
 					comp.add("true");
 					comp.add("false");
+				}
+				if ( args[1].equals("dropcalipse") ) {
+					comp.add("255");
 				}
 				break;
 			default:
