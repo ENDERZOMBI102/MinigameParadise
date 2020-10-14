@@ -1,10 +1,8 @@
 package com.enderzombi102.MinigameParadise.modes.bedrockpaint;
 
-import com.enderzombi102.MinigameParadise.MinigameParadise;
-import com.enderzombi102.MinigameParadise.Util;
-import com.enderzombi102.MinigameParadise.modes.ModeBase;
-
+import java.util.List;
 import com.google.common.collect.Sets;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -13,7 +11,9 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
 
-import java.util.List;
+import com.enderzombi102.MinigameParadise.MinigameParadise;
+import com.enderzombi102.MinigameParadise.Util;
+import com.enderzombi102.MinigameParadise.modes.ModeBase;
 
 public class BedrockPainter extends ModeBase {
 
@@ -39,7 +39,7 @@ public class BedrockPainter extends ModeBase {
 			List<Block> sight = evt.getPlayer().getLineOfSight( Sets.complementOf( Util.unsolid ), 100);
 			Block block = sight.get( sight.size() - 1 );
 			// is it a solid block?
-			if (Util.unsolid.contains( block.getType() ) ) {
+			if ( Util.solid.contains( block.getType() ) ) {
 				// replace the pointed block with bedrock
 				block.setType( Material.BEDROCK );
 			}

@@ -1,5 +1,7 @@
 package com.enderzombi102.MinigameParadise;
 
+import java.util.ArrayList;
+
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.enderzombi102.MinigameParadise.commands.CommandListPlayers;
@@ -8,19 +10,19 @@ import com.enderzombi102.MinigameParadise.modes.ModeBase;
 
 public class MinigameParadise extends JavaPlugin {
 	public static MinigameParadise instance;
-	public static ModeBase currentMode = null;
+	public static ArrayList<ModeBase> activeModes = new ArrayList<>();
 	public static String version = "1.0.0";
 	public static boolean editWorld;
 	public MinigameParadise() {
 		super();
 		MinigameParadise.instance = this;
-		Util.setupLists();
 	}
 	
 	@Override
 	public void onLoad() {
 		saveDefaultConfig();
 		editWorld = this.getConfig().getBoolean("editWorld");
+		if ( Util.solid.isEmpty() ) Util.setupLists();
 	}
 	
 	// Fired when plugin is enabled
@@ -35,7 +37,9 @@ public class MinigameParadise extends JavaPlugin {
     // Fired when plugin is disabled
     @Override
     public void onDisable() {
-    	MinigameParadise.currentMode.stop();
-    	MinigameParadise.currentMode = null;
+		for (ModeBase mode : activeModes) {
+			mode.stop();
+			activeModes.remove(mode);
+		}
     }
 }

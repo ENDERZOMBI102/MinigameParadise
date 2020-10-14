@@ -1,6 +1,7 @@
 package com.enderzombi102.MinigameParadise;
 
 import java.util.logging.Logger;
+
 import org.bukkit.Bukkit;
 
 public final class LogHelper {

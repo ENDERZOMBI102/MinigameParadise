@@ -1,7 +1,7 @@
 package com.enderzombi102.MinigameParadise.modes.deathswap;
 
 import java.util.ArrayList;
-import java.util.function.Consumer;
+import com.google.common.collect.Lists;
 
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
@@ -12,7 +12,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import com.enderzombi102.MinigameParadise.MinigameParadise;
 import com.enderzombi102.MinigameParadise.modes.ModeBase;
-import com.google.common.collect.Lists;
 
 public class DeathSwap extends ModeBase {
 	

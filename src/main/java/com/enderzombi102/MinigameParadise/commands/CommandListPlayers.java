@@ -3,6 +3,7 @@ package com.enderzombi102.MinigameParadise.commands;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import com.google.common.collect.Lists;
 
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -11,7 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 
-import com.google.common.collect.Lists;
+
 
 public class CommandListPlayers implements TabExecutor {
 	
