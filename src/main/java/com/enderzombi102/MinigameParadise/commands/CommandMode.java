@@ -3,6 +3,7 @@ package com.enderzombi102.MinigameParadise.commands;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.enderzombi102.MinigameParadise.modes.gravity.Gravity;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -78,6 +79,13 @@ public class CommandMode implements TabExecutor {
 					stopMode( BlockPainter.class );
 				}
 				return true;
+			case "gravity":
+				if (start) {
+					MinigameParadise.activeModes.add( new Gravity() );
+				} else {
+					stopMode( Gravity.class );
+				}
+				return true;
 			default:
 				return false;
 		}
@@ -95,6 +103,7 @@ public class CommandMode implements TabExecutor {
 				comp.add("deathswap");
 				comp.add("bedrockpainter");
 				comp.add("blockpainter");
+				comp.add("gravity");
 				break;
 			case 4:
 			case 5:
