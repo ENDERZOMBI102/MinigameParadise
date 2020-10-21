@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.enderzombi102.MinigameParadise.modes.dropcalipse.Dropcalipse;
-import com.enderzombi102.MinigameParadise.modes.gravity.Gravity;
+import com.enderzombi102.MinigameParadise.modes.explodingcursor.ExplodingCursor;
+import com.enderzombi102.MinigameParadise.modes.mobcalipse.Mobcalipse;
+import com.enderzombi102.MinigameParadise.modes.tntworld.TntWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -43,16 +45,6 @@ public class CommandMode implements TabExecutor {
 					if (args.length >= 5) allowNether = Boolean.parseBoolean(args[3]);
 					MinigameParadise.activeModes.add( new DeathSwap(time, hardcore, allowNether) );
 				} else {
-//					sender.getServer().broadcastMessage("stopping DeathSwap");
-//					//DeathSwap mode
-//					for (ModeBase mode : MinigameParadise.activeModes) {
-//						if ( mode instanceof DeathSwap ) {
-//							mode.stop();
-//							MinigameParadise.activeModes.remove(mode);
-//							break;
-//						}
-//					}
-//					sender.getServer().broadcastMessage("DeathSwap stopped!");
 					stopMode( DeathSwap.class );
 				}
 				return true;
@@ -60,16 +52,6 @@ public class CommandMode implements TabExecutor {
 				if (start) {
 					MinigameParadise.activeModes.add( new BedrockPainter() );
 				} else {
-//					sender.getServer().broadcastMessage("stopping BedrockPainter");
-//					//BedrockPainter mode
-//					for (ModeBase mode : MinigameParadise.activeModes) {
-//						if ( mode instanceof BedrockPainter ) {
-//							mode.stop();
-//							MinigameParadise.activeModes.remove(mode);
-//							break;
-//						}
-//					}
-//					sender.getServer().broadcastMessage("BedrockPainter stopped!");
 					stopMode( BedrockPainter.class );
 				}
 				return true;
@@ -78,13 +60,6 @@ public class CommandMode implements TabExecutor {
 					MinigameParadise.activeModes.add( new BlockPainter() );
 				} else {
 					stopMode( BlockPainter.class );
-				}
-				return true;
-			case "gravity":
-				if (start) {
-					MinigameParadise.activeModes.add( new Gravity() );
-				} else {
-					stopMode( Gravity.class );
 				}
 				return true;
 			case "dropcalipse":
@@ -98,7 +73,35 @@ public class CommandMode implements TabExecutor {
 					stopMode( Dropcalipse.class );
 				}
 				return true;
+			case "mobcalipse":
+				if (start) {
+					MinigameParadise.activeModes.add( new Mobcalipse() );
+				} else {
+					stopMode( Mobcalipse.class );
+				}
+				return true;
+			case "tntworld":
+				if (start) {
+					MinigameParadise.activeModes.add( new TntWorld() );
+				} else {
+					stopMode( TntWorld.class );
+				}
+				return true;
+			case "explodingcursor":
+				if (start) {
+					MinigameParadise.activeModes.add( new ExplodingCursor() );
+				} else {
+					stopMode( ExplodingCursor.class );
+				}
+				return true;
 			default:
+//			case "":
+//				if (start) {
+//					MinigameParadise.activeModes.add( new );
+//				} else {
+//					stopMode( .class );
+//				}
+//				return true;
 				return false;
 		}
 	}
@@ -115,8 +118,10 @@ public class CommandMode implements TabExecutor {
 				comp.add("deathswap");
 				comp.add("bedrockpainter");
 				comp.add("blockpainter");
-				comp.add("gravity");
 				comp.add("dropcalipse");
+				comp.add("mobcalipse");
+				comp.add("tntworld");
+				comp.add("explodingcursor");
 				break;
 			case 3:
 				if ( args[1].equals("dropcalipse") ) {
