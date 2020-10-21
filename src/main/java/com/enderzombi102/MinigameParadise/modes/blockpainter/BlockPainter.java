@@ -2,6 +2,8 @@ package com.enderzombi102.MinigameParadise.modes.blockpainter;
 
 import java.util.List;
 import java.util.Random;
+
+import com.enderzombi102.MinigameParadise.events.PlayerRaycastHitChangeEvent;
 import com.google.common.collect.Sets;
 
 import org.bukkit.Bukkit;
@@ -35,10 +37,10 @@ public class BlockPainter extends ModeBase {
 	public class BlockPainterListener implements Listener {
 
 		@EventHandler
-		public void OnPlayerLook(PlayerMoveEvent evt) {
+		public void OnPlayerLook(PlayerRaycastHitChangeEvent evt) {
 			// get the block pointed by the player
-			List<Block> sight = evt.getPlayer().getLineOfSight( null, 100);
-			Block block = sight.get( sight.size() - 1 );
+//			List<Block> sight = evt.getPlayer().getLineOfSight( null, 100);
+			Block block = evt.getHitResult(); // sight.get( sight.size() - 1 );
 			// is a solid block?
 			if ( Util.solid.contains( block.getType() ) ) {
 				// yes, get a random block
