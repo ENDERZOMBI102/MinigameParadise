@@ -2,15 +2,25 @@ package com.enderzombi102.MinigameParadise;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
 
 public class Util {
 
 	public static List<Material> solid = new ArrayList<>();
 	public static List<Material> unsolid = new ArrayList<>();
+	public static Set<Material> transparentBlocks;
+	public static ArrayList<ItemStack> boots = new ArrayList<>();
+	public static ArrayList<ItemStack> leggins = new ArrayList<>();
+	public static ArrayList<ItemStack> chestplate = new ArrayList<>();
+	public static ArrayList<ItemStack> helmet = new ArrayList<>();
+	public static ArrayList<ItemStack> weapon = new ArrayList<>();
+	public static ArrayList<Enchantment> weapon_enchants = new ArrayList<>();
 
 
 	public static void setupLists() {
@@ -54,6 +64,52 @@ public class Util {
 
 		// put into unsolid everything that isn't solid and an item
 		unsolid = Stream.of( Material.values() ).filter( mat -> !mat.isSolid() && !mat.isItem() && !mat.isOccluding() ).collect( Collectors.toList() );
+
+		transparentBlocks = Stream.of( Material.values() ).filter( material -> !material.isOccluding() ).collect( Collectors.toSet() );
+
+		boots.add( null );
+		boots.add( new ItemStack(Material.DIAMOND_BOOTS) );
+		boots.add( new ItemStack(Material.LEATHER_BOOTS) );
+		boots.add( new ItemStack(Material.CHAINMAIL_BOOTS) );
+		boots.add( new ItemStack(Material.IRON_BOOTS) );
+		boots.add( new ItemStack(Material.GOLDEN_BOOTS) );
+
+		leggins.add( null );
+		leggins.add( new ItemStack(Material.DIAMOND_LEGGINGS) );
+		leggins.add( new ItemStack(Material.LEATHER_LEGGINGS) );
+		leggins.add( new ItemStack(Material.CHAINMAIL_LEGGINGS) );
+		leggins.add( new ItemStack(Material.IRON_LEGGINGS) );
+		leggins.add( new ItemStack(Material.GOLDEN_LEGGINGS) );
+
+		chestplate.add( null );
+		chestplate.add( new ItemStack(Material.DIAMOND_CHESTPLATE) );
+		chestplate.add( new ItemStack(Material.LEATHER_CHESTPLATE) );
+		chestplate.add( new ItemStack(Material.CHAINMAIL_CHESTPLATE) );
+		chestplate.add( new ItemStack(Material.IRON_CHESTPLATE) );
+		chestplate.add( new ItemStack(Material.GOLDEN_CHESTPLATE) );
+
+		helmet.add( null );
+		helmet.add( new ItemStack(Material.DIAMOND_HELMET) );
+		helmet.add( new ItemStack(Material.LEATHER_HELMET) );
+		helmet.add( new ItemStack(Material.CHAINMAIL_HELMET) );
+		helmet.add( new ItemStack(Material.IRON_HELMET) );
+		helmet.add( new ItemStack(Material.GOLDEN_HELMET) );
+
+		weapon.add( new ItemStack(Material.DIAMOND_AXE) );
+		weapon.add( new ItemStack(Material.IRON_AXE) );
+		weapon.add( new ItemStack(Material.GOLDEN_AXE) );
+		weapon.add( new ItemStack(Material.DIAMOND_SWORD) );
+		weapon.add( new ItemStack(Material.IRON_SWORD) );
+		weapon.add( new ItemStack(Material.GOLDEN_SWORD) );
+		weapon.add( new ItemStack(Material.BOW) );
+		weapon.add( new ItemStack(Material.STONE_AXE) );
+		weapon.add( new ItemStack(Material.TOTEM_OF_UNDYING) );
+
+		weapon_enchants.add( Enchantment.FIRE_ASPECT);
+		weapon_enchants.add( Enchantment.DAMAGE_ALL);
+		weapon_enchants.add( Enchantment.ARROW_FIRE);
+		weapon_enchants.add( null );
+
 	}
 
 
