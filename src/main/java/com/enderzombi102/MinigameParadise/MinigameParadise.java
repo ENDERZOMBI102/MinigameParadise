@@ -2,6 +2,8 @@ package com.enderzombi102.MinigameParadise;
 
 import java.util.ArrayList;
 
+import com.enderzombi102.MinigameParadise.generalListeners.PlayerEventListener;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.enderzombi102.MinigameParadise.commands.CommandListPlayers;
@@ -31,6 +33,7 @@ public class MinigameParadise extends JavaPlugin {
 		LogHelper.Info("loading MinigameParadise v"+version+"!" );
 		this.getCommand("mode").setExecutor( new CommandMode() );
 		this.getCommand("listplayers").setExecutor( new CommandListPlayers() );
+		Bukkit.getPluginManager().registerEvents( new PlayerEventListener(), this );
 		LogHelper.Info("finished loading MinigameParadise!");
     }
 	
