@@ -17,7 +17,6 @@ import com.enderzombi102.MinigameParadise.modes.deathswap.DeathSwap;
 import com.enderzombi102.MinigameParadise.modes.ModeBase;
 import com.enderzombi102.MinigameParadise.modes.bedrockpaint.BedrockPainter;
 import com.enderzombi102.MinigameParadise.modes.blockpainter.BlockPainter;
-import org.jetbrains.annotations.NotNull;
 
 public class CommandMode implements TabExecutor {
 
@@ -153,7 +152,7 @@ public class CommandMode implements TabExecutor {
 	}
 
 
-	private void stopMode(@NotNull Class cls ) {
+	private void stopMode(Class cls ) {
 		Bukkit.broadcastMessage( "[" + cls.getSimpleName() + "] stopping..");
 		//BedrockPainter mode
 		for (ModeBase mode : MinigameParadise.activeModes) {
