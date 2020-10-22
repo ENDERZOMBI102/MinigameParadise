@@ -17,6 +17,7 @@ import com.enderzombi102.MinigameParadise.modes.deathswap.DeathSwap;
 import com.enderzombi102.MinigameParadise.modes.ModeBase;
 import com.enderzombi102.MinigameParadise.modes.bedrockpaint.BedrockPainter;
 import com.enderzombi102.MinigameParadise.modes.blockpainter.BlockPainter;
+import org.jetbrains.annotations.NotNull;
 
 public class CommandMode implements TabExecutor {
 
@@ -95,6 +96,9 @@ public class CommandMode implements TabExecutor {
 				}
 				return true;
 			default:
+				return false;
+		}
+	}
 //			case "":
 //				if (start) {
 //					MinigameParadise.activeModes.add( new );
@@ -102,41 +106,44 @@ public class CommandMode implements TabExecutor {
 //					stopMode( .class );
 //				}
 //				return true;
-				return false;
-		}
-	}
 
 	@Override
 	public List<String> onTabComplete( CommandSender sender, Command command, String alias, String[] args ) {
 		ArrayList<String> comp = new ArrayList<>();
-		switch (args.length) {
-			case 1:
+		switch (args.length - 1) {
+			case 0:
 				comp.add("start");
 				comp.add("stop");
 				break;
+			case 1:
+				if ( args[0].equals("start") ) {
+					comp.add("deathswap");
+					comp.add("bedrockpainter");
+					comp.add("blockpainter");
+					comp.add("dropcalipse");
+					comp.add("mobcalipse");
+					comp.add("tntworld");
+					comp.add("explodingcursor");
+				} else {
+					for (ModeBase mode : MinigameParadise.activeModes) {
+						comp.add( mode.getClass().getSimpleName().toLowerCase() );
+					}
+				}
+				break;
 			case 2:
-				comp.add("deathswap");
-				comp.add("bedrockpainter");
-				comp.add("blockpainter");
-				comp.add("dropcalipse");
-				comp.add("mobcalipse");
-				comp.add("tntworld");
-				comp.add("explodingcursor");
+				if ( args[1].equals("dropcalipse") && args[0].equals("start") ) {
+					comp.add("255");
+				}
 				break;
 			case 3:
-				if ( args[1].equals("dropcalipse") ) {
+				if ( args[1].equals("dropcalipse") && args[0].equals("start") ) {
 					comp.add("true");
 					comp.add("false");
 				}
-				break;
 			case 4:
-			case 5:
-				if ( args[1].equals("deathswap") ) {
+				if ( args[1].equals("deathswap") && args[0].equals("start") ) {
 					comp.add("true");
 					comp.add("false");
-				}
-				if ( args[1].equals("dropcalipse") ) {
-					comp.add("255");
 				}
 				break;
 			default:
@@ -145,7 +152,8 @@ public class CommandMode implements TabExecutor {
 		return comp;
 	}
 
-	private void stopMode( Class cls ) {
+
+	private void stopMode(@NotNull Class cls ) {
 		Bukkit.broadcastMessage( "[" + cls.getSimpleName() + "] stopping..");
 		//BedrockPainter mode
 		for (ModeBase mode : MinigameParadise.activeModes) {
