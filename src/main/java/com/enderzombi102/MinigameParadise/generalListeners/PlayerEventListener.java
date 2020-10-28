@@ -8,7 +8,8 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,5 +48,4 @@ public class PlayerEventListener implements Listener {
 		}
 
 	}
-
 }
