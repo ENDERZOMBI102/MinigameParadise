@@ -2,6 +2,7 @@ package com.enderzombi102.MinigameParadise;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -67,34 +68,35 @@ public class Util {
 
 		transparentBlocks = Stream.of( Material.values() ).filter( material -> !material.isOccluding() ).collect( Collectors.toSet() );
 
-		boots.add( null );
+		boots.add( new ItemStack(Material.AIR) );
 		boots.add( new ItemStack(Material.DIAMOND_BOOTS) );
 		boots.add( new ItemStack(Material.LEATHER_BOOTS) );
 		boots.add( new ItemStack(Material.CHAINMAIL_BOOTS) );
 		boots.add( new ItemStack(Material.IRON_BOOTS) );
 		boots.add( new ItemStack(Material.GOLDEN_BOOTS) );
 
-		leggins.add( null );
+		leggins.add( new ItemStack(Material.AIR) );
 		leggins.add( new ItemStack(Material.DIAMOND_LEGGINGS) );
 		leggins.add( new ItemStack(Material.LEATHER_LEGGINGS) );
 		leggins.add( new ItemStack(Material.CHAINMAIL_LEGGINGS) );
 		leggins.add( new ItemStack(Material.IRON_LEGGINGS) );
 		leggins.add( new ItemStack(Material.GOLDEN_LEGGINGS) );
 
-		chestplate.add( null );
+		chestplate.add( new ItemStack(Material.AIR) );
 		chestplate.add( new ItemStack(Material.DIAMOND_CHESTPLATE) );
 		chestplate.add( new ItemStack(Material.LEATHER_CHESTPLATE) );
 		chestplate.add( new ItemStack(Material.CHAINMAIL_CHESTPLATE) );
 		chestplate.add( new ItemStack(Material.IRON_CHESTPLATE) );
 		chestplate.add( new ItemStack(Material.GOLDEN_CHESTPLATE) );
 
-		helmet.add( null );
+		helmet.add( new ItemStack(Material.AIR) );
 		helmet.add( new ItemStack(Material.DIAMOND_HELMET) );
 		helmet.add( new ItemStack(Material.LEATHER_HELMET) );
 		helmet.add( new ItemStack(Material.CHAINMAIL_HELMET) );
 		helmet.add( new ItemStack(Material.IRON_HELMET) );
 		helmet.add( new ItemStack(Material.GOLDEN_HELMET) );
 
+		weapon.add( new ItemStack(Material.AIR) );
 		weapon.add( new ItemStack(Material.DIAMOND_AXE) );
 		weapon.add( new ItemStack(Material.IRON_AXE) );
 		weapon.add( new ItemStack(Material.GOLDEN_AXE) );
@@ -112,5 +114,28 @@ public class Util {
 
 	}
 
+	public static boolean randomPercent(int percent) {
+		return new Random().nextFloat() <= percent / 100;
+	}
+
+	public static boolean randomPercent(float percent) {
+		return new Random().nextFloat() <= percent;
+	}
+
+	public static int randomInt(int max, int min) {
+		int x;
+		do {
+			x = new Random().nextInt(max);
+		} while(x < min);
+		return x;
+	}
+
+	public static int randomInt(int max) {
+		return new Random().nextInt(max);
+	}
+
+	public static <E> E randomEntry(List<E> list) {
+		return list.get( new Random().nextInt( list.size() - 1) );
+	}
 
 }
