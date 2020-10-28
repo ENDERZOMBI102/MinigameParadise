@@ -2,11 +2,9 @@ package com.enderzombi102.MinigameParadise;
 
 import java.util.logging.Logger;
 
-import org.bukkit.Bukkit;
-
 public final class LogHelper {
 	
-	private static Logger logger = Bukkit.getLogger();
+	private static final Logger logger = Logger.getLogger("RandomUtils");
 	
 	public static void Info(String txt) {
 		LogHelper.logger.info(txt);
