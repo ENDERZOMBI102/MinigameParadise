@@ -9,7 +9,10 @@ import java.util.stream.Stream;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
 public class Util {
 
@@ -112,6 +115,17 @@ public class Util {
 		weapon_enchants.add( Enchantment.ARROW_FIRE);
 		weapon_enchants.add( null );
 
+	}
+
+	public static void addInfPotion(LivingEntity ent, PotionEffectType type, int amplifier, boolean particles) {
+		ent.addPotionEffect( new PotionEffect(
+				type,
+				Integer.MAX_VALUE,
+				amplifier,
+				particles,
+				particles
+			)
+		);
 	}
 
 }

@@ -16,6 +16,8 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDropItemEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -184,8 +186,22 @@ public class Mobcalipse extends ModeBase {
 					editWeapon = false;
 					break;
 			}
-			//all the other mobs will have armor
 			LivingEntity entity = (LivingEntity) evt.getEntity();
+			// common attributes
+			if (entity.getType() == EntityType.ZOMBIE ||
+				entity.getType() == EntityType.SKELETON ||
+				entity.getType() == EntityType.HUSK) {
+
+				if (Random.possibility(20)) {
+					Util.addInfPotion(entity, PotionEffectType.INCREASE_DAMAGE, 2, false);
+				} else if (Random.possibility(20)) {
+					Util.addInfPotion(entity, PotionEffectType.DAMAGE_RESISTANCE, 3, false);
+				}
+			}
+			if (entity.getType() == EntityType.CREEPER || entity.getType() == EntityType.ZOMBIE) {
+				if (Random.possibility(40)) Util.addInfPotion(entity, PotionEffectType.JUMP, 5, false);
+			}
+			//all the other mobs will have armor
 			entity.getEquipment().setArmorContents( randomArmor() );
 			if (editWeapon) {
 				ItemStack weapon = Random.randomEntry( Util.weapon );
