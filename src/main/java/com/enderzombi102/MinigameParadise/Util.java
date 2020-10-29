@@ -114,28 +114,4 @@ public class Util {
 
 	}
 
-	public static boolean randomPercent(int percent) {
-		return new Random().nextFloat() <= percent / 100;
-	}
-
-	public static boolean randomPercent(float percent) {
-		return new Random().nextFloat() <= percent;
-	}
-
-	public static int randomInt(int max, int min) {
-		int x;
-		do {
-			x = new Random().nextInt(max);
-		} while(x < min);
-		return x;
-	}
-
-	public static int randomInt(int max) {
-		return new Random().nextInt(max);
-	}
-
-	public static <E> E randomEntry(List<E> list) {
-		return list.get( new Random().nextInt( list.size() - 1) );
-	}
-
 }
