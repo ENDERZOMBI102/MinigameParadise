@@ -186,7 +186,7 @@ public class Mobcalipse extends ModeBase {
 					editWeapon = false;
 					break;
 			}
-			LivingEntity entity = (LivingEntity) evt.getEntity();
+			LivingEntity entity = evt.getEntity();
 			// common attributes
 			if (entity.getType() == EntityType.ZOMBIE ||
 				entity.getType() == EntityType.SKELETON ||
@@ -216,7 +216,7 @@ public class Mobcalipse extends ModeBase {
 		}
 
 		@EventHandler
-		public void OnEntityMove(EntityDamageByEntityEvent evt) {
+		public void OnEntityDamage(EntityDamageByEntityEvent evt) {
 			switch (evt.getEntityType()) {
 				case SKELETON:
 				case WITCH:
@@ -241,7 +241,7 @@ public class Mobcalipse extends ModeBase {
 			}
 			if ( evt.getDamager().getType() != EntityType.PLAYER ) {
 				// if the damage was dealt by an entity, discard it and search for targets
-				evt.setDamage(0);
+				evt.setCancelled(true);
 				Mob ent = (Mob) evt.getEntity();
 				List<Entity> possibleTargets = ent.getNearbyEntities(20, 20, 20)
 						.stream().filter(entity -> entity.getType() == EntityType.PLAYER)
