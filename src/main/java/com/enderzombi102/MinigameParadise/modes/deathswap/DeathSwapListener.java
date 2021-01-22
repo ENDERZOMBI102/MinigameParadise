@@ -8,12 +8,6 @@ import org.bukkit.event.player.PlayerPortalEvent;
 
 public class DeathSwapListener implements Listener {
 
-	public static DeathSwapListener instance;
-
-	public DeathSwapListener() {
-		DeathSwapListener.instance = this;
-	}
-
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) {
 		DeathSwap.instance.checkWin( event.getEntity() );

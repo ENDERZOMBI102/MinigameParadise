@@ -1,6 +1,8 @@
 package com.enderzombi102.MinigameParadise.modes.deathswap;
 
 import java.util.ArrayList;
+
+import com.enderzombi102.MinigameParadise.Util;
 import com.google.common.collect.Lists;
 
 import org.bukkit.*;
@@ -15,14 +17,16 @@ import com.enderzombi102.MinigameParadise.modes.ModeBase;
 
 public class DeathSwap extends ModeBase {
 	
-	public static DeathSwap instance;
-	public boolean allowNether;
+	static DeathSwap instance;
+	boolean allowNether;
+	private final DeathSwapListener listener;
 	private final BukkitRunnable timerThread;
 	private final ArrayList< ArrayList<Player> > teams = new ArrayList<>();
 
 	public DeathSwap(int swapTime, boolean hardcore, boolean allowNether) {
 		// add event listener for this gamemode
-		Bukkit.getPluginManager().registerEvents( new DeathSwapListener(), MinigameParadise.instance );
+		this.listener = new DeathSwapListener();
+		Util.registerListener(this.listener);
 		// send mode info
 		broadcastPrefixedMessage("setting up DeathSwap mode");
 		int time = swapTime * 60;
@@ -108,7 +112,7 @@ public class DeathSwap extends ModeBase {
 
 	@Override
 	public void stop() {
-		HandlerList.unregisterAll(DeathSwapListener.instance);
+		HandlerList.unregisterAll(this.listener);
 		this.timerThread.cancel();
 	}
 	
