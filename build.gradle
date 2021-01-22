@@ -8,24 +8,20 @@ buildscript {
 	}
 }
 
-
-
 plugins {
     // Apply the java-library plugin to add support for Java Library
     id 'java-library'
-	id "io.freefair.lombok" version "5.2.1"
+	id 'io.freefair.lombok' version '5.2.1'
 }
 
 group 'com.enderzombi102'
 version '1.0-SNAPSHOT'
 
+
 repositories {
     // Use jcenter for resolving dependencies.
     // You can declare any Maven/Ivy/file repository here.
     jcenter()
-    maven {
-        url "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
-    }
 	maven {
 		name = 'papermc-repo'
 		url = 'https://papermc.io/repo/repository/maven-public/'
@@ -34,19 +30,17 @@ repositories {
 		name = 'sonatype'
 		url = 'https://oss.sonatype.org/content/groups/public/'
 	}
+	mavenLocal()
 }
 
 dependencies {
 
-//	compileOnly 'org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT'
-//	annotationProcessor 'org.spigotmc:plugin-annotations:1.2.3-SNAPSHOT'
 	compileOnly 'org.jetbrains:annotations:19.0.0'
-//
-//    implementation 'org.spigotmc:spigot-api:1.16.3-R0.1-SNAPSHOT'
 
 	//paper
-	compileOnly 'com.destroystokyo.paper:paper-api:1.16.3-R0.1-SNAPSHOT'
-	compile "io.papermc:paperlib:1.0.5"
+	compileOnly 'com.destroystokyo.paper:paper-api:1.16.4-R0.1-SNAPSHOT'
+	compile 'io.papermc:paperlib:1.0.6'
+	//compileOnly 'com.destroystokyo.paper:paper:1.16.4-R0.1-SNAPSHOT'
 
     // This dependency is exported to consumers, that is to say found on their compile classpath.
     //api 'org.apache.commons:commons-math3:3.6.1'
@@ -55,7 +49,8 @@ dependencies {
     //implementation 'com.google.guava:guava:28.0-jre'
 }
 
-apply plugin: "com.github.johnrengelman.shadow"
+apply plugin: 'com.github.johnrengelman.shadow'
+
 shadowJar {
-	relocate 'io.papermc.lib', '[YOUR PLUGIN PACKAGE].paperlib'
+	relocate 'io.papermc.lib', 'com.enderzombi102.paperlib'
 }
