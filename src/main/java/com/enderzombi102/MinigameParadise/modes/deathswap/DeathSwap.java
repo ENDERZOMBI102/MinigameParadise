@@ -18,7 +18,7 @@ public class DeathSwap extends ModeBase {
 	public static DeathSwap instance;
 	public boolean allowNether;
 	private final BukkitRunnable timerThread;
-	private ArrayList< ArrayList<Player> > teams = new ArrayList<>();
+	private final ArrayList< ArrayList<Player> > teams = new ArrayList<>();
 
 	public DeathSwap(int swapTime, boolean hardcore, boolean allowNether) {
 		// add event listener for this gamemode
@@ -37,6 +37,7 @@ public class DeathSwap extends ModeBase {
 		// start the timer thread
 		this.timerThread = new DeathSwapTimer(time);
 		this.timerThread.runTaskTimer(MinigameParadise.instance, 20, 20);
+		DeathSwap.instance = this;
 		broadcastPrefixedMessage("the clock is ticking! timer started!");
 	}
 	
