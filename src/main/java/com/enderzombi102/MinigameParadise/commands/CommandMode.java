@@ -135,9 +135,10 @@ public class CommandMode implements TabExecutor {
 				if (start) {
 					if ( checkMode(ManHunt.class) ) return false;
 					boolean deathSpectator = Boolean.parseBoolean( args[2] );
-					String[] targets = Arrays.copyOfRange(args, 3, args.length);
+					boolean giveCompassOnRespawn = Boolean.parseBoolean( args[3] );
+					String[] targets = Arrays.copyOfRange(args, 4, args.length);
 					sender.sendMessage( Arrays.toString( targets ) );
-					MinigameParadise.activeModes.add( new ManHunt(targets, deathSpectator, sender) );
+					MinigameParadise.activeModes.add( new ManHunt(targets, deathSpectator, giveCompassOnRespawn, sender) );
 				} else {
 					if (! checkMode(ManHunt.class) ) {
 						sender.sendMessage(ChatColor.RED + "ERROR: Mode \"ManHunt\" is not active.");
