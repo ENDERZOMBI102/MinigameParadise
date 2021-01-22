@@ -6,13 +6,7 @@ import com.enderzombi102.MinigameParadise.modes.ModeBase;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -22,10 +16,10 @@ import java.util.UUID;
 public class ManHunt extends ModeBase {
 
 	public static ManHunt instance;
-	private final ArrayList<UUID> targets = new ArrayList<>();
-	private final HashMap<UUID, UUID> playerTargets = new HashMap<>();
-	private final boolean deathSpectator;
-	private final boolean giveCompassOnRespawn;
+	final ArrayList<UUID> targets = new ArrayList<>();
+	final HashMap<UUID, UUID> playerTargets = new HashMap<>();
+	final boolean deathSpectator;
+	final boolean giveCompassOnRespawn;
 	private final Location startPoint;
 	public ManHuntListener listener;
 
@@ -85,49 +79,6 @@ public class ManHunt extends ModeBase {
 			player.getInventory().clear();
 			player.setBedSpawnLocation(this.startPoint);
 			player.teleport(this.startPoint);
-		}
-	}
-
-	public static class ManHuntListener implements Listener {
-
-
-		@EventHandler
-		public void onPlayerMove(PlayerMoveEvent evt) {
-			if ( ManHunt.instance.targets.contains( evt.getPlayer().getUniqueId() ) ) {
-				for ( Player player : Bukkit.getOnlinePlayers() ) {
-					if (! ManHunt.instance.targets.contains( player.getUniqueId() ) ) {
-						player.setCompassTarget( evt.getTo() );
-					}
-				}
-			}
-		}
-
-		@EventHandler
-		public void onPlayerDamage(EntityDamageEvent evt) {
-			if ( ManHunt.instance.deathSpectator ) {
-				if (evt.getEntity() instanceof Player) {
-					Player player = (Player) evt.getEntity();
-					if ( ManHunt.instance.targets.contains(player.getUniqueId() ) ) {
-						if (evt.getFinalDamage() >= player.getHealth()) {
-							evt.setCancelled(true);
-							player.setGameMode(GameMode.SPECTATOR);
-							player.getInventory().clear();
-							player.closeInventory(InventoryCloseEvent.Reason.DEATH);
-							// check if every player is dead
-							ManHunt.instance.checkFinish();
-						}
-					}
-				}
-			}
-		}
-
-		@EventHandler
-		public void onPlayerDeath(PlayerRespawnEvent evt) {
-			if (ManHunt.instance.giveCompassOnRespawn) {
-				if (! ManHunt.instance.targets.contains( evt.getPlayer().getUniqueId() ) ) {
-					evt.getPlayer().getInventory().addItem( new ItemStack(Material.COMPASS) );
-				}
-			}
 		}
 	}
 
