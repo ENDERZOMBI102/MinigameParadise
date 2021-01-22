@@ -45,6 +45,7 @@ public class ManHunt extends ModeBase {
 		for ( Player player : Bukkit.getOnlinePlayers() ) {
 			if (! ManHunt.instance.targets.contains( player.getUniqueId() ) ) {
 				player.getInventory().addItem( new ItemStack(Material.COMPASS) );
+				this.playerTargets.put( player.getUniqueId(), this.targets.get(0) );
 			}
 		}
 
