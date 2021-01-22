@@ -1,21 +1,15 @@
 package com.enderzombi102.MinigameParadise.modes.bedrockpaint;
 
-import java.util.List;
-
+import com.enderzombi102.MinigameParadise.MinigameParadise;
+import com.enderzombi102.MinigameParadise.Util;
 import com.enderzombi102.MinigameParadise.events.PlayerRaycastHitChangeEvent;
-import com.google.common.collect.Sets;
-
+import com.enderzombi102.MinigameParadise.modes.ModeBase;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
-
-import com.enderzombi102.MinigameParadise.MinigameParadise;
-import com.enderzombi102.MinigameParadise.Util;
-import com.enderzombi102.MinigameParadise.modes.ModeBase;
 
 public class BedrockPainter extends ModeBase {
 
@@ -33,7 +27,7 @@ public class BedrockPainter extends ModeBase {
 		HandlerList.unregisterAll(this.listener);
 	}
 
-	public class BedrockPainterListener implements Listener {
+	public static class BedrockPainterListener implements Listener {
 
 		@EventHandler
 		public void OnPlayerLook(PlayerRaycastHitChangeEvent evt) {

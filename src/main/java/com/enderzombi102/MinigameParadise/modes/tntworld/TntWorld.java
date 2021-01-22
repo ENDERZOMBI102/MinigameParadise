@@ -1,8 +1,7 @@
 package com.enderzombi102.MinigameParadise.modes.tntworld;
 
-import com.enderzombi102.MinigameParadise.MinigameParadise;
+import com.enderzombi102.MinigameParadise.Util;
 import com.enderzombi102.MinigameParadise.modes.ModeBase;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.TNTPrimed;
@@ -23,7 +22,7 @@ public class TntWorld extends ModeBase {
 	public TntWorld() {
 		broadcastPrefixedMessage("started!");
 		this.listener = new TntWorldListener();
-		Bukkit.getPluginManager().registerEvents(this.listener, MinigameParadise.instance);
+		Util.registerListener(this.listener);
 	}
 
 	@Override
@@ -31,7 +30,7 @@ public class TntWorld extends ModeBase {
 		HandlerList.unregisterAll(this.listener);
 	}
 
-	private class TntWorldListener implements Listener {
+	private static class TntWorldListener implements Listener {
 		@EventHandler
 		public void onPlayerMove(PlayerMoveEvent evt) {
 			Location oldPos = evt.getFrom(), newPos = evt.getTo();

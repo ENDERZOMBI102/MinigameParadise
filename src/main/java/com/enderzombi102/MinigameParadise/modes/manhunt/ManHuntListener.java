@@ -15,7 +15,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.UUID;
 
-public class ManHuntListener implements Listener {
+class ManHuntListener implements Listener {
 
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent evt) {

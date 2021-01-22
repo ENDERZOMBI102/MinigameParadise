@@ -1,8 +1,7 @@
 package com.enderzombi102.MinigameParadise.modes.dropcalipse;
 
-import com.enderzombi102.MinigameParadise.MinigameParadise;
+import com.enderzombi102.MinigameParadise.Util;
 import com.enderzombi102.MinigameParadise.modes.ModeBase;
-
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Item;
@@ -28,7 +27,7 @@ public class Dropcalipse extends ModeBase {
 		this.randomDrops = randomDrops;
 		this.maxDrops = maxDrops;
 		this.listener = new DropcalipseListener();
-		Bukkit.getPluginManager().registerEvents(this.listener , MinigameParadise.instance);
+		Util.registerListener(this.listener);
 		broadcastPrefixedMessage("the Dropcalipse is started! good luck!");
 	}
 
@@ -51,20 +50,20 @@ public class Dropcalipse extends ModeBase {
 		HandlerList.unregisterAll(this.listener);
 	}
 
-	private class DropcalipseListener implements Listener {
+	private static class DropcalipseListener implements Listener {
 
 		@EventHandler
 		public void OnBlockDrop(BlockDropItemEvent evt) {
 			for (Item item : evt.getItems()) {
 				Bukkit.broadcastMessage(item.getItemStack().toString());
-				item.setItemStack( randomize(item) );
+				item.setItemStack( Dropcalipse.instance.randomize(item) );
 			}
 		}
 
 		@EventHandler
 		public void OnEntityDrop(EntityDropItemEvent evt) {
 			Bukkit.broadcastMessage(evt.getItemDrop().getItemStack().toString());
-			ItemStack drop = randomize( evt.getItemDrop() );
+			ItemStack drop = Dropcalipse.instance.randomize( evt.getItemDrop() );
 			evt.getItemDrop().setItemStack( drop );
 		}
 	}

@@ -6,7 +6,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 
 
-public class DeathSwapListener implements Listener {
+class DeathSwapListener implements Listener {
 
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent event) {

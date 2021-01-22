@@ -25,7 +25,7 @@ public class BlockPainter extends ModeBase {
 	public BlockPainter() {
 		broadcastPrefixedMessage("Starting..");
 		this.listener = new BlockPainterListener();
-		Bukkit.getPluginManager().registerEvents(this.listener , MinigameParadise.instance);
+		Util.registerListener(this.listener);
 		broadcastPrefixedMessage("Started!");
 	}
 
@@ -34,7 +34,7 @@ public class BlockPainter extends ModeBase {
 		HandlerList.unregisterAll(this.listener);
 	}
 
-	public class BlockPainterListener implements Listener {
+	public static class BlockPainterListener implements Listener {
 
 		@EventHandler
 		public void OnPlayerLook(PlayerRaycastHitChangeEvent evt) {
