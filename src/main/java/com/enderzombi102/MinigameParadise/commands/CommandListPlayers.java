@@ -2,7 +2,6 @@ package com.enderzombi102.MinigameParadise.commands;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 import com.google.common.collect.Lists;
 
 import org.bukkit.Bukkit;
@@ -11,17 +10,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
-
+import org.jetbrains.annotations.NotNull;
 
 
 public class CommandListPlayers implements TabExecutor {
-	
-	protected String getUsage() {
-		return "/ListPlayers <gamemode> [onlynumber]";
-	}
 
 	@Override
-	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+	public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
 		ArrayList<String> comp = new ArrayList<>();
 		if (args.length < 2) {
 			comp.add("survival");
@@ -38,51 +33,23 @@ public class CommandListPlayers implements TabExecutor {
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 		if (args.length < 1) return false;
 		// get all players
 		ArrayList<Player> players = Lists.newArrayList( Bukkit.getOnlinePlayers() );
 		// remove the players that aren't in the required gamemode
 		switch (args[0]) {
 		case "survival":
-			players.removeIf( new Predicate<Player>() {
-
-				@Override
-				public boolean test(Player player) {
-					return player.getGameMode() != GameMode.SURVIVAL;
-				}
-			
-			});
+			players.removeIf( player -> player.getGameMode() != GameMode.SURVIVAL );
 			break;
 		case "creative":
-			players.removeIf( new Predicate<Player>() {
-
-				@Override
-				public boolean test(Player player) {
-					return player.getGameMode() != GameMode.CREATIVE;
-				}
-			
-			});
+			players.removeIf( player -> player.getGameMode() != GameMode.CREATIVE );
 			break;
 		case "adventure":
-			players.removeIf( new Predicate<Player>() {
-
-				@Override
-				public boolean test(Player player) {
-					return player.getGameMode() != GameMode.ADVENTURE;
-				}
-			
-			});
+			players.removeIf( player -> player.getGameMode() != GameMode.ADVENTURE );
 			break;
 		case "spectator":
-			players.removeIf( new Predicate<Player>() {
-
-				@Override
-				public boolean test(Player player) {
-					return player.getGameMode() != GameMode.SPECTATOR;
-				}
-			
-			});
+			players.removeIf( player -> player.getGameMode() != GameMode.SPECTATOR );
 			break;
 		case "all":
 			args[0] = "";
