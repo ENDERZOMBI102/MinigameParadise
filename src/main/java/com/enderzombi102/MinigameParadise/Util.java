@@ -2,14 +2,15 @@ package com.enderzombi102.MinigameParadise;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -126,6 +127,10 @@ public class Util {
 				particles
 			)
 		);
+	}
+
+	public static void registerListener(Listener listener) {
+		Bukkit.getPluginManager().registerEvents(listener , MinigameParadise.instance);
 	}
 
 }
