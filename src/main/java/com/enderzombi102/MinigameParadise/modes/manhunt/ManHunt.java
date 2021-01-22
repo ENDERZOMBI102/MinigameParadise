@@ -12,20 +12,24 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class ManHunt extends ModeBase {
 
 	public static ManHunt instance;
 	private final ArrayList<UUID> targets = new ArrayList<>();
+	private final HashMap<UUID, UUID> playerTargets = new HashMap<>();
 	private final boolean deathSpectator;
+	private final boolean giveCompassOnRespawn;
 	private final Location startPoint;
 	public ManHuntListener listener;
 
-	public ManHunt(String[] targets, boolean deathSpectator, CommandSender sender) {
+	public ManHunt(String[] targets, boolean deathSpectator, boolean giveCompassOnRespawn, CommandSender sender) {
 		broadcastPrefixedMessage("Starting manhunt!");
 		instance = this;
 		for ( String target : targets ) {
@@ -39,6 +43,7 @@ public class ManHunt extends ModeBase {
 		}
 		this.startPoint = ( (Player) sender ).getLocation();
 		this.deathSpectator = deathSpectator;
+		this.giveCompassOnRespawn = giveCompassOnRespawn;
 		this.listener = new ManHuntListener();
 		Util.registerListener(this.listener);
 		BlockRestorerListener.INSTANCE.start();
@@ -112,6 +117,15 @@ public class ManHunt extends ModeBase {
 							ManHunt.instance.checkFinish();
 						}
 					}
+				}
+			}
+		}
+
+		@EventHandler
+		public void onPlayerDeath(PlayerRespawnEvent evt) {
+			if (ManHunt.instance.giveCompassOnRespawn) {
+				if (! ManHunt.instance.targets.contains( evt.getPlayer().getUniqueId() ) ) {
+					evt.getPlayer().getInventory().addItem( new ItemStack(Material.COMPASS) );
 				}
 			}
 		}
