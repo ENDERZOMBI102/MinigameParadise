@@ -5,7 +5,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 public class DeathSwapTimer extends BukkitRunnable {
 	
-	private int time;
+	private final int time;
 	private int counter = 0;
 
     public DeathSwapTimer(int time) {
