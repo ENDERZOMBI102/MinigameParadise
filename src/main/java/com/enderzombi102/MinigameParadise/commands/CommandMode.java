@@ -8,6 +8,7 @@ import com.enderzombi102.MinigameParadise.modes.dropcalipse.Dropcalipse;
 import com.enderzombi102.MinigameParadise.modes.explodingcursor.ExplodingCursor;
 import com.enderzombi102.MinigameParadise.modes.manhunt.ManHunt;
 import com.enderzombi102.MinigameParadise.modes.mobcalipse.Mobcalipse;
+import com.enderzombi102.MinigameParadise.modes.tagged.Tagged;
 import com.enderzombi102.MinigameParadise.modes.teletimer.TeleTimer;
 import com.enderzombi102.MinigameParadise.modes.tntworld.TntWorld;
 import org.bukkit.Bukkit;
@@ -50,15 +51,15 @@ public class CommandMode implements TabExecutor {
 					if (args.length >= 3) time = Integer.parseInt(args[2]);
 					if (args.length >= 4) hardcore = Boolean.parseBoolean(args[3]);
 					if (args.length >= 5) allowNether = Boolean.parseBoolean(args[4]);
-					MinigameParadise.activeModes.add(new DeathSwap(time, hardcore, allowNether));
+					MinigameParadise.activeModes.add( new DeathSwap( time, hardcore, allowNether ) );
 					return true;
 				case "bedrockpainter":
 					if ( checkMode(BedrockPainter.class) ) return false;
-					MinigameParadise.activeModes.add(new BedrockPainter());
+					MinigameParadise.activeModes.add( new BedrockPainter() );
 					return true;
 				case "blockpainter":
 					if ( checkMode(BlockPainter.class) ) return false;
-					MinigameParadise.activeModes.add(new BlockPainter());
+					MinigameParadise.activeModes.add( new BlockPainter() );
 					return true;
 				case "dropcalipse":
 					if ( checkMode(Dropcalipse.class) ) return false;
@@ -66,19 +67,19 @@ public class CommandMode implements TabExecutor {
 					boolean randomDrops = false;
 					if (args.length >= 3) maxDrops = Integer.parseInt(args[2]);
 					if (args.length >= 4) randomDrops = Boolean.parseBoolean(args[3]);
-					MinigameParadise.activeModes.add(new Dropcalipse(randomDrops, maxDrops));
+					MinigameParadise.activeModes.add( new Dropcalipse( randomDrops, maxDrops ) );
 					return true;
 				case "mobcalipse":
 					if (checkMode(Mobcalipse.class) ) return false;
-					MinigameParadise.activeModes.add(new Mobcalipse());
+					MinigameParadise.activeModes.add( new Mobcalipse() );
 					return true;
 				case "tntworld":
 					if ( checkMode(TntWorld.class) ) return false;
-					MinigameParadise.activeModes.add(new TntWorld());
+					MinigameParadise.activeModes.add( new TntWorld() );
 					return true;
 				case "explodingcursor":
 					if (checkMode(ExplodingCursor.class)) return false;
-					MinigameParadise.activeModes.add(new ExplodingCursor());
+					MinigameParadise.activeModes.add( new ExplodingCursor() );
 					return true;
 				case "manhunt":
 					if ( checkMode(ManHunt.class) ) return false;
@@ -91,13 +92,19 @@ public class CommandMode implements TabExecutor {
 						return false;
 					}
 					sender.sendMessage(Arrays.toString(targets));
-					MinigameParadise.activeModes.add(new ManHunt(targets, deathSpectator, giveCompassOnRespawn, sender));
+					MinigameParadise.activeModes.add(
+							new ManHunt( targets, deathSpectator, giveCompassOnRespawn, sender )
+					);
 					return true;
 				case "teletimer":
 					if ( checkMode(TeleTimer.class) ) return false;
 					int teleTimer = Integer.parseInt(args[2]);
 					boolean usePearls = Boolean.parseBoolean(args[3]);
-					MinigameParadise.activeModes.add(new TeleTimer(teleTimer, usePearls));
+					MinigameParadise.activeModes.add( new TeleTimer( teleTimer, usePearls ) );
+					return true;
+				case "tagged":
+					if ( checkMode(Tagged.class) ) return false;
+					MinigameParadise.activeModes.add( new Tagged() );
 					return true;
 				default:
 					return false;
@@ -175,6 +182,13 @@ public class CommandMode implements TabExecutor {
 				}
 				stopMode( TeleTimer.class );
 				return true;
+			case "tagged":
+				if (! checkMode(Tagged.class) ) {
+					sender.sendMessage(ChatColor.RED + "ERROR: Mode \"Tagged\" is not active.");
+					return false;
+				}
+				stopMode( Tagged.class );
+				return true;
 			default:
 				return false;
 		}
@@ -213,6 +227,8 @@ public class CommandMode implements TabExecutor {
 				builder.append(" <time>");
 				builder.append(" <usePearls>");
 				break;
+			case "tagged":
+				break;
 			default:
 				return false;
 		}
@@ -240,6 +256,7 @@ public class CommandMode implements TabExecutor {
 					comp.add("explodingcursor");
 					comp.add("manhunt");
 					comp.add("teletimer");
+					comp.add("tagged");
 					if ( args[0].equals("start") ) {
 						for (ModeBase mode : MinigameParadise.activeModes) {
 							comp.remove(mode.getClass().getSimpleName().toLowerCase());
