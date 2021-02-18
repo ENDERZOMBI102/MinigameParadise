@@ -67,7 +67,7 @@ class ManHuntListener implements Listener {
 
 		final UUID player = evt.getPlayer().getUniqueId();
 		// target check
-		if (! ManHunt.instance.targets.contains(player) ) return;
+		if ( ManHunt.instance.targets.contains(player) ) return;
 
 		UUID target = ManHunt.instance.playerTargets.get(player);
 		int index = ManHunt.instance.targets.indexOf(target) + 1;
