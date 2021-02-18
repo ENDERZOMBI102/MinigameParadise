@@ -133,4 +133,8 @@ public class Util {
 		Bukkit.getPluginManager().registerEvents(listener , MinigameParadise.instance);
 	}
 
+	public static void broadcastMessage(String message) {
+		Bukkit.broadcastMessage(message);
+	}
+
 }
