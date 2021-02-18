@@ -8,7 +8,7 @@ description: Adds Minigames and Gamemodes to your server
 commands:
    mode:
       description: Starts/stops a gamemode
-      usage: /mode <start|stop> <mode> [parameters]
+      usage: /mode <start|stop|help> <mode> [parameters]
       permission: MinigameParadise.modifyGamemodeState
    listplayers:
       description: list all players

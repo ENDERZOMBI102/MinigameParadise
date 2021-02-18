@@ -39,8 +39,14 @@ public class PlayerEventListener implements Listener {
 		UUID player = evt.getPlayer().getUniqueId();
 		if ( playerHits.containsKey( player ) ) {
 			if ( playerHits.get( player ).getBlock().getType() != hitBlock.getType() ) {
-				Bukkit.getPluginManager().callEvent(new PlayerRaycastHitChangeEvent(evt.getPlayer(), hitBlock));
-				playerHits.put(player, hitBlock.getLocation());
+				Bukkit.getPluginManager().callEvent(
+						new PlayerRaycastHitChangeEvent(
+								evt.getPlayer(),
+								playerHits.get( player ).getBlock(),
+								hitBlock
+						)
+				);
+				playerHits.put( player, hitBlock.getLocation() );
 			}
 		} else {
 			playerHits.put( player, hitBlock.getLocation() );

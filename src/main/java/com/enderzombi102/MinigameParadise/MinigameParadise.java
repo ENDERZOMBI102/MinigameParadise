@@ -44,9 +44,13 @@ public class MinigameParadise extends JavaPlugin {
 			@Override
 			public boolean execute(@NotNull CommandSender sender, @NotNull String commandLabel, @NotNull String[] args) {
 				if (sender instanceof Player) {
-					Player player = (Player) sender;
-					player.getInventory().addItem( new ItemStack(Material.DIAMOND_AXE) );
-					player.getInventory().addItem( new ItemStack(Material.COOKED_BEEF, 64) );
+					if ( activeModes.isEmpty() ) {
+						Player player = (Player) sender;
+						player.getInventory().addItem(new ItemStack(Material.DIAMOND_AXE));
+						player.getInventory().addItem(new ItemStack(Material.COOKED_BEEF, 64));
+					} else {
+						broadcastCommandMessage(sender, "Can't use kit when a mode is active");
+					}
 					return true;
 				}
 				return false;

@@ -39,8 +39,7 @@ public class BlockPainter extends ModeBase {
 		@EventHandler
 		public void OnPlayerLook(PlayerRaycastHitChangeEvent evt) {
 			// get the block pointed by the player
-//			List<Block> sight = evt.getPlayer().getLineOfSight( null, 100);
-			Block block = evt.getHitResult(); // sight.get( sight.size() - 1 );
+			Block block = evt.getNewHitResult(); // sight.get( sight.size() - 1 );
 			// is a solid block?
 			if ( Util.solid.contains( block.getType() ) ) {
 				// yes, get a random block

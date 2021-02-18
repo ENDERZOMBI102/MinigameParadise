@@ -32,8 +32,7 @@ public class BedrockPainter extends ModeBase {
 		@EventHandler
 		public void OnPlayerLook(PlayerRaycastHitChangeEvent evt) {
 			// get the block pointed by the player, ignoring non-solid blocks
-//			List<Block> sight = evt.getPlayer().getLineOfSight( null, 100);
-			Block block = evt.getHitResult(); // sight.get( sight.size() - 1 );
+			Block block = evt.getNewHitResult(); // sight.get( sight.size() - 1 );
 			// is it a solid block?
 			if ( Util.solid.contains( block.getType() ) ) {
 				// replace the pointed block with bedrock
