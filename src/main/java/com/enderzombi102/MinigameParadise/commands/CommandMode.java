@@ -39,62 +39,72 @@ public class CommandMode implements TabExecutor {
 	}
 
 	private boolean execStart(@NotNull CommandSender sender, String[] args) {
-		// handle command
-		switch(args[1]) {
-			case "deathswap":
-				//deathswap mode
-				if ( checkMode(DeathSwap.class) ) return false;
-				int time = 5;
-				boolean hardcore = true, allowNether = true;
-				if (args.length >= 3) time = Integer.parseInt(args[2]);
-				if (args.length >= 4) hardcore = Boolean.parseBoolean(args[3]);
-				if (args.length >= 5) allowNether = Boolean.parseBoolean(args[4]);
-				MinigameParadise.activeModes.add( new DeathSwap(time, hardcore, allowNether) );
-				return true;
-			case "bedrockpainter":
-				if ( checkMode(BedrockPainter.class) ) return false;
-				MinigameParadise.activeModes.add( new BedrockPainter() );
-				return true;
-			case "blockpainter":
-				if ( checkMode(BlockPainter.class) ) return false;
-				MinigameParadise.activeModes.add( new BlockPainter() );
-				return true;
-			case "dropcalipse":
-				if ( checkMode(Dropcalipse.class) ) return false;
-				int maxDrops = 255;
-				boolean randomDrops = false;
-				if (args.length >= 3) maxDrops = Integer.parseInt( args[2] );
-				if (args.length >= 4) randomDrops = Boolean.parseBoolean( args[3] );
-				MinigameParadise.activeModes.add( new Dropcalipse( randomDrops, maxDrops ) );
-				return true;
-			case "mobcalipse":
-				if ( checkMode(Mobcalipse.class) ) return false;
-				MinigameParadise.activeModes.add( new Mobcalipse() );
-				return true;
-			case "tntworld":
-				if ( checkMode(TntWorld.class) ) return false;
-				MinigameParadise.activeModes.add( new TntWorld() );
-				return true;
-			case "explodingcursor":
-				if ( checkMode(ExplodingCursor.class) ) return false;
-				MinigameParadise.activeModes.add( new ExplodingCursor() );
-				return true;
-			case "manhunt":
-				if ( checkMode(ManHunt.class) ) return false;
-				boolean deathSpectator = Boolean.parseBoolean( args[2] );
-				boolean giveCompassOnRespawn = Boolean.parseBoolean( args[3] );
-				String[] targets = Arrays.copyOfRange(args, 4, args.length);
-				sender.sendMessage( Arrays.toString( targets ) );
-				MinigameParadise.activeModes.add( new ManHunt(targets, deathSpectator, giveCompassOnRespawn, sender) );
-				return true;
-			case "teletimer":
-				if ( checkMode(TeleTimer.class) ) return false;
-				int teleTimer = Integer.parseInt( args[2] );
-				boolean usePearls = Boolean.parseBoolean( args[3] );
-				MinigameParadise.activeModes.add( new TeleTimer(teleTimer, usePearls) );
-				return true;
-			default:
-				return false;
+		try {
+			// handle command
+			switch (args[1]) {
+				case "deathswap":
+					//deathswap mode
+					if (checkMode(DeathSwap.class)) return false;
+					int time = 5;
+					boolean hardcore = true, allowNether = true;
+					if (args.length >= 3) time = Integer.parseInt(args[2]);
+					if (args.length >= 4) hardcore = Boolean.parseBoolean(args[3]);
+					if (args.length >= 5) allowNether = Boolean.parseBoolean(args[4]);
+					MinigameParadise.activeModes.add(new DeathSwap(time, hardcore, allowNether));
+					return true;
+				case "bedrockpainter":
+					if (checkMode(BedrockPainter.class)) return false;
+					MinigameParadise.activeModes.add(new BedrockPainter());
+					return true;
+				case "blockpainter":
+					if (checkMode(BlockPainter.class)) return false;
+					MinigameParadise.activeModes.add(new BlockPainter());
+					return true;
+				case "dropcalipse":
+					if (checkMode(Dropcalipse.class)) return false;
+					int maxDrops = 255;
+					boolean randomDrops = false;
+					if (args.length >= 3) maxDrops = Integer.parseInt(args[2]);
+					if (args.length >= 4) randomDrops = Boolean.parseBoolean(args[3]);
+					MinigameParadise.activeModes.add(new Dropcalipse(randomDrops, maxDrops));
+					return true;
+				case "mobcalipse":
+					if (checkMode(Mobcalipse.class)) return false;
+					MinigameParadise.activeModes.add(new Mobcalipse());
+					return true;
+				case "tntworld":
+					if (checkMode(TntWorld.class)) return false;
+					MinigameParadise.activeModes.add(new TntWorld());
+					return true;
+				case "explodingcursor":
+					if (checkMode(ExplodingCursor.class)) return false;
+					MinigameParadise.activeModes.add(new ExplodingCursor());
+					return true;
+				case "manhunt":
+					if (checkMode(ManHunt.class)) return false;
+					boolean deathSpectator = Boolean.parseBoolean(args[2]);
+					boolean giveCompassOnRespawn = Boolean.parseBoolean(args[3]);
+					String[] targets = Arrays.copyOfRange(args, 4, args.length);
+					// no players no party
+					if (targets.length == 0) {
+						sender.sendMessage(ChatColor.RED + "ERROR: Missing hunted players names!");
+						return false;
+					}
+					sender.sendMessage(Arrays.toString(targets));
+					MinigameParadise.activeModes.add(new ManHunt(targets, deathSpectator, giveCompassOnRespawn, sender));
+					return true;
+				case "teletimer":
+					if (checkMode(TeleTimer.class)) return false;
+					int teleTimer = Integer.parseInt(args[2]);
+					boolean usePearls = Boolean.parseBoolean(args[3]);
+					MinigameParadise.activeModes.add(new TeleTimer(teleTimer, usePearls));
+					return true;
+				default:
+					return false;
+			}
+		} catch (IndexOutOfBoundsException e) {
+			sender.sendMessage( ChatColor.RED + "ERROR: Missing parameters!");
+			return true;
 		}
 	}
 
@@ -172,31 +182,36 @@ public class CommandMode implements TabExecutor {
 
 	private boolean execHelp(@NotNull CommandSender sender, String[] args) {
 		StringBuilder builder = new StringBuilder();
+		builder.append( ChatColor.DARK_AQUA );
+		builder.append( "displaying manhunt parameters\n" );
+		builder.append( ChatColor.BLUE );
+		builder.append("/mode start ");
+		builder.append(args[1]);
 		switch(args[1]) {
 			case "deathswap":
-				builder.append("<time> ");
-				builder.append("<hardcore> ");
-				builder.append("<allowNether>");
+				builder.append(" <time>");
+				builder.append(" <hardcore>");
+				builder.append(" <allowNether>");
 				break;
 			case "bedrockpainter":
 			case "blockpainter":
 				break;
 			case "dropcalipse":
-				builder.append("<maxDrops> ");
-				builder.append("<randomDrops>");
+				builder.append(" <maxDrops>");
+				builder.append(" <randomDrops>");
 				break;
 			case "mobcalipse":
 			case "tntworld":
 			case "explodingcursor":
 				break;
 			case "manhunt":
-				builder.append("<huntedSpectateOnDeath>");
-				builder.append("<giveCompassOnRespawn>");
-				builder.append("<hunted...>");
+				builder.append(" <huntedSpectateOnDeath>");
+				builder.append(" <giveCompassOnRespawn>");
+				builder.append(" <hunted...>");
 				break;
 			case "teletimer":
-				builder.append("<time>");
-				builder.append("<usePearls>");
+				builder.append(" <time>");
+				builder.append(" <usePearls>");
 				break;
 			default:
 				return false;
@@ -212,9 +227,10 @@ public class CommandMode implements TabExecutor {
 			case 0:
 				comp.add("start");
 				comp.add("stop");
+				comp.add("help");
 				break;
 			case 1:
-				if ( args[0].equals("start") ) {
+				if ( args[0].equals("start") || args[0].equals("help") ) {
 					comp.add("deathswap");
 					comp.add("bedrockpainter");
 					comp.add("blockpainter");
@@ -224,8 +240,10 @@ public class CommandMode implements TabExecutor {
 					comp.add("explodingcursor");
 					comp.add("manhunt");
 					comp.add("teletimer");
-					for (ModeBase mode : MinigameParadise.activeModes) {
-						comp.remove( mode.getClass().getSimpleName().toLowerCase() );
+					if ( args[0].equals("start") ) {
+						for (ModeBase mode : MinigameParadise.activeModes) {
+							comp.remove(mode.getClass().getSimpleName().toLowerCase());
+						}
 					}
 				} else {
 					for (ModeBase mode : MinigameParadise.activeModes) {
@@ -242,21 +260,26 @@ public class CommandMode implements TabExecutor {
 				}
 				break;
 			case 3:
-				if ( ( args[1].equals("dropcalipse") || args[1].equals("teletimer") ) && args[0].equals("start") ) {
-					comp.add("true");
-					comp.add("false");
-				}
-			case 4:
-				if ( args[1].equals("deathswap") && args[0].equals("start") ) {
+				if ( ( args[1].equals("dropcalipse") || args[1].equals("teletimer") || args[1].equals("manhunt") ) && args[0].equals("start") ) {
 					comp.add("true");
 					comp.add("false");
 				}
 				break;
+			case 4:
+				if ( args[0].equals("start") ) {
+					if ( args[1].equals("deathswap") ) {
+						comp.add("true");
+						comp.add("false");
+						break;
+					}
+				}
 			default:
-				if ( args[1].equals("manhunt")  && args[0].equals("start") ) {
-					for ( Player player : Bukkit.getOnlinePlayers() ) {
-						if (! ( Arrays.toString(args).contains( player.getName() ) || player.getName().equals( sender.getName() ) ) ) {
-							comp.add( player.getName() );
+				if ( args[0].equals("start") ) {
+					if (args[1].equals("manhunt")) {
+						for (Player player : Bukkit.getOnlinePlayers()) {
+							if (!(Arrays.toString(args).contains(player.getName()) || player.getName().equals(sender.getName()))) {
+								comp.add(player.getName());
+							}
 						}
 					}
 				}
