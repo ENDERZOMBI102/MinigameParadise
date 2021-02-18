@@ -7,9 +7,13 @@ import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.CompassMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.UUID;
 
@@ -44,7 +48,19 @@ public class ManHunt extends ModeBase {
 
 		for ( Player player : Bukkit.getOnlinePlayers() ) {
 			if (! ManHunt.instance.targets.contains( player.getUniqueId() ) ) {
-				player.getInventory().addItem( new ItemStack(Material.COMPASS) );
+				ItemStack stack = new ItemStack(Material.COMPASS);
+				CompassMeta meta = (CompassMeta) stack.getItemMeta();
+				// set lore and name
+				meta.setDisplayName("Tracker Compass");
+				meta.setLore(
+						Arrays.asList(
+								"Right click to change target",
+								"Tracking: " + Bukkit.getPlayer( this.targets.get(0) ).getDisplayName()
+						)
+				);
+				// update the itemstack
+				stack.setItemMeta( meta );
+				player.getInventory().addItem( stack );
 				this.playerTargets.put( player.getUniqueId(), this.targets.get(0) );
 			}
 		}
@@ -64,7 +80,7 @@ public class ManHunt extends ModeBase {
 	@Override
 	public void stop() {
 		HandlerList.unregisterAll(this.listener);
-		instance = null;
+		ManHunt.instance = null;
 		if (BlockRestorerListener.INSTANCE.active) BlockRestorerListener.INSTANCE.restoreAndStop();
 	}
 
