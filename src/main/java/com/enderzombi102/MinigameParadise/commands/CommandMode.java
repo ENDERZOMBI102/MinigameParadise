@@ -44,7 +44,7 @@ public class CommandMode implements TabExecutor {
 			switch (args[1]) {
 				case "deathswap":
 					//deathswap mode
-					if (checkMode(DeathSwap.class)) return false;
+					if ( checkMode(DeathSwap.class) ) return false;
 					int time = 5;
 					boolean hardcore = true, allowNether = true;
 					if (args.length >= 3) time = Integer.parseInt(args[2]);
@@ -53,15 +53,15 @@ public class CommandMode implements TabExecutor {
 					MinigameParadise.activeModes.add(new DeathSwap(time, hardcore, allowNether));
 					return true;
 				case "bedrockpainter":
-					if (checkMode(BedrockPainter.class)) return false;
+					if ( checkMode(BedrockPainter.class) ) return false;
 					MinigameParadise.activeModes.add(new BedrockPainter());
 					return true;
 				case "blockpainter":
-					if (checkMode(BlockPainter.class)) return false;
+					if ( checkMode(BlockPainter.class) ) return false;
 					MinigameParadise.activeModes.add(new BlockPainter());
 					return true;
 				case "dropcalipse":
-					if (checkMode(Dropcalipse.class)) return false;
+					if ( checkMode(Dropcalipse.class) ) return false;
 					int maxDrops = 255;
 					boolean randomDrops = false;
 					if (args.length >= 3) maxDrops = Integer.parseInt(args[2]);
@@ -69,11 +69,11 @@ public class CommandMode implements TabExecutor {
 					MinigameParadise.activeModes.add(new Dropcalipse(randomDrops, maxDrops));
 					return true;
 				case "mobcalipse":
-					if (checkMode(Mobcalipse.class)) return false;
+					if (checkMode(Mobcalipse.class) ) return false;
 					MinigameParadise.activeModes.add(new Mobcalipse());
 					return true;
 				case "tntworld":
-					if (checkMode(TntWorld.class)) return false;
+					if ( checkMode(TntWorld.class) ) return false;
 					MinigameParadise.activeModes.add(new TntWorld());
 					return true;
 				case "explodingcursor":
@@ -81,7 +81,7 @@ public class CommandMode implements TabExecutor {
 					MinigameParadise.activeModes.add(new ExplodingCursor());
 					return true;
 				case "manhunt":
-					if (checkMode(ManHunt.class)) return false;
+					if ( checkMode(ManHunt.class) ) return false;
 					boolean deathSpectator = Boolean.parseBoolean(args[2]);
 					boolean giveCompassOnRespawn = Boolean.parseBoolean(args[3]);
 					String[] targets = Arrays.copyOfRange(args, 4, args.length);
@@ -94,7 +94,7 @@ public class CommandMode implements TabExecutor {
 					MinigameParadise.activeModes.add(new ManHunt(targets, deathSpectator, giveCompassOnRespawn, sender));
 					return true;
 				case "teletimer":
-					if (checkMode(TeleTimer.class)) return false;
+					if ( checkMode(TeleTimer.class) ) return false;
 					int teleTimer = Integer.parseInt(args[2]);
 					boolean usePearls = Boolean.parseBoolean(args[3]);
 					MinigameParadise.activeModes.add(new TeleTimer(teleTimer, usePearls));
