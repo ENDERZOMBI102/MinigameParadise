@@ -1,16 +1,16 @@
 package com.enderzombi102.MinigameParadise.modes.manhunt;
 
+import com.enderzombi102.MinigameParadise.MinigameParadise;
 import com.enderzombi102.MinigameParadise.Util;
 import com.enderzombi102.MinigameParadise.generalListeners.BlockRestorerListener;
 import com.enderzombi102.MinigameParadise.modes.ModeBase;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.CompassMeta;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -27,7 +27,8 @@ public class ManHunt extends ModeBase {
 	private final Location startPoint;
 	public ManHuntListener listener;
 
-	public ManHunt(String[] targets, boolean deathSpectator, boolean giveCompassOnRespawn, CommandSender sender) {
+	public ManHunt(String[] targets, boolean deathSpectator, boolean giveCompassOnRespawn, CommandSender sender) throws ModeStartAbortException {
+		final boolean debug = true;
 		broadcastPrefixedMessage("Starting manhunt!");
 		instance = this;
 		for ( String target : targets ) {
@@ -39,6 +40,12 @@ public class ManHunt extends ModeBase {
 			}
 
 		}
+
+		if ( this.targets.size() == 0 ) {
+			sender.sendMessage( ChatColor.RED + "No valid players provided, aborting");
+			throw new ModeStartAbortException();
+		}
+
 		this.startPoint = ( (Player) sender ).getLocation();
 		this.deathSpectator = deathSpectator;
 		this.giveCompassOnRespawn = giveCompassOnRespawn;
@@ -47,21 +54,9 @@ public class ManHunt extends ModeBase {
 		BlockRestorerListener.INSTANCE.start();
 
 		for ( Player player : Bukkit.getOnlinePlayers() ) {
-			if (! ManHunt.instance.targets.contains( player.getUniqueId() ) ) {
-				ItemStack stack = new ItemStack(Material.COMPASS);
-				CompassMeta meta = (CompassMeta) stack.getItemMeta();
-				// set lore and name
-				meta.setDisplayName("Tracker Compass");
-				meta.setLore(
-						Arrays.asList(
-								"Right click to change target",
-								"Tracking: " + Bukkit.getPlayer( this.targets.get(0) ).getDisplayName()
-						)
-				);
-				// update the itemstack
-				stack.setItemMeta( meta );
-				player.getInventory().addItem( stack );
+			if ( (! ManHunt.instance.targets.contains( player.getUniqueId() ) ) || debug ) {
 				this.playerTargets.put( player.getUniqueId(), this.targets.get(0) );
+				this.giveCompass( player );
 			}
 		}
 
@@ -79,9 +74,17 @@ public class ManHunt extends ModeBase {
 
 	@Override
 	public void stop() {
+		// restore blocks
+		BlockRestorerListener.INSTANCE.restoreAndStop();
+		// clear inventories, spawnpoints and location
+		for (Player player : Bukkit.getOnlinePlayers() ) {
+			player.getInventory().clear();
+			player.setBedSpawnLocation(this.startPoint);
+			player.teleport(this.startPoint);
+		}
+		// normal stuff
 		HandlerList.unregisterAll(this.listener);
 		ManHunt.instance = null;
-		if (BlockRestorerListener.INSTANCE.active) BlockRestorerListener.INSTANCE.restoreAndStop();
 	}
 
 	public void checkFinish() {
@@ -91,12 +94,40 @@ public class ManHunt extends ModeBase {
 			}
 		}
 		// if reaches here, we're finished
-		BlockRestorerListener.INSTANCE.restore();
-		for (Player player : Bukkit.getOnlinePlayers() ) {
-			player.getInventory().clear();
-			player.setBedSpawnLocation(this.startPoint);
-			player.teleport(this.startPoint);
-		}
+		this.stop();
+		MinigameParadise.activeModes.remove(this);
 	}
 
+	public void giveCompass(Player player) {
+		// get the stack
+		ItemStack stack = new ItemStack(Material.COMPASS);
+		updateCompassMeta(
+				stack,
+				Bukkit.getPlayer(
+					this.playerTargets.get(
+						player.getUniqueId()
+					)
+				).getName()
+		);
+		player.getInventory().addItem( stack );
+	}
+
+	static void updateCompassMeta(ItemStack stack, String target) {
+		// get the metadata
+		CompassMeta meta = (CompassMeta) stack.getItemMeta();
+		// set lore and name
+		TextComponent comp = new TextComponent();
+		comp.setText("Tracker Compass");
+		comp.setBold(false);
+		comp.setColor( net.md_5.bungee.api.ChatColor.LIGHT_PURPLE );
+		meta.setDisplayNameComponent( new TextComponent[]{ comp } );
+		meta.setLore(
+				Arrays.asList(
+						"Right click to change target",
+						"Tracking: " + target
+				)
+		);
+		// update the itemstack
+		stack.setItemMeta( meta );
+	}
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import com.enderzombi102.MinigameParadise.modes.dropcalipse.Dropcalipse;
 import com.enderzombi102.MinigameParadise.modes.explodingcursor.ExplodingCursor;
 import com.enderzombi102.MinigameParadise.modes.manhunt.ManHunt;
+import com.enderzombi102.MinigameParadise.modes.manhunt.ModeStartAbortException;
 import com.enderzombi102.MinigameParadise.modes.mobcalipse.Mobcalipse;
 import com.enderzombi102.MinigameParadise.modes.tagged.Tagged;
 import com.enderzombi102.MinigameParadise.modes.teletimer.TeleTimer;
@@ -91,10 +92,14 @@ public class CommandMode implements TabExecutor {
 						sender.sendMessage(ChatColor.RED + "ERROR: Missing hunted players names!");
 						return false;
 					}
-					sender.sendMessage(Arrays.toString(targets));
-					MinigameParadise.activeModes.add(
-							new ManHunt( targets, deathSpectator, giveCompassOnRespawn, sender )
-					);
+					sender.sendMessage( Arrays.toString(targets) );
+					try {
+						MinigameParadise.activeModes.add(
+								new ManHunt( targets, deathSpectator, giveCompassOnRespawn, sender )
+						);
+					} catch (ModeStartAbortException e) {
+						return true;
+					}
 					return true;
 				case "teletimer":
 					if ( checkMode(TeleTimer.class) ) return false;

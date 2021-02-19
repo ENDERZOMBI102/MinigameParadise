@@ -12,11 +12,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.CompassMeta;
 
-import java.util.Arrays;
 import java.util.UUID;
 
 class ManHuntListener implements Listener {
@@ -74,23 +70,7 @@ class ManHuntListener implements Listener {
 	public void onPlayerDeath(PlayerPostRespawnEvent evt) {
 		if (ManHunt.instance.giveCompassOnRespawn) {
 			if (! ManHunt.instance.targets.contains( evt.getPlayer().getUniqueId() ) ) {
-				ItemStack stack = new ItemStack(Material.COMPASS);
-				CompassMeta meta = (CompassMeta) stack.getItemMeta();
-				// set lore and name
-				meta.setDisplayName("Tracker Compass");
-				meta.setLore(
-						Arrays.asList(
-								"Right click to change target",
-								"Tracking: " + Bukkit.getPlayer(
-												ManHunt.instance.playerTargets.get(
-														evt.getPlayer().getUniqueId()
-												)
-										).getName()
-						)
-				);
-				// update the itemstack
-				stack.setItemMeta( meta );
-				evt.getPlayer().getInventory().addItem( stack );
+				ManHunt.instance.giveCompass( evt.getPlayer() );
 			}
 		}
 	}
@@ -101,14 +81,14 @@ class ManHuntListener implements Listener {
 		// action check
 		if (! ( evt.getAction() == Action.RIGHT_CLICK_AIR || evt.getAction() == Action.RIGHT_CLICK_BLOCK ) ) return;
 		// compass check
-		if ( evt.getItem().getType() != Material.COMPASS )  return;
+		if ( evt.getItem() == null || evt.getItem().getType() != Material.COMPASS )  return;
 		if (! evt.getItem().getItemMeta().getDisplayName().equals("Tracker Compass") ) return;
 		// targets check
 		if ( ManHunt.instance.targets.size() == 1 ) return;
 
 		final UUID player = evt.getPlayer().getUniqueId();
 		// target check
-		if ( ManHunt.instance.targets.contains(player) ) return;
+//		if ( ManHunt.instance.targets.contains(player) ) return;
 
 		UUID target = ManHunt.instance.playerTargets.get(player);
 		int index = ManHunt.instance.targets.indexOf(target) + 1;
@@ -123,15 +103,7 @@ class ManHuntListener implements Listener {
 		final String targetName = Bukkit.getPlayer(target).getName();
 
 		// update metadata
-		final CompassMeta meta = (CompassMeta) evt.getItem().getItemMeta();
-		meta.setDisplayName("Tracker Compass");
-		meta.setLore(
-				Arrays.asList(
-						"Right click to change target",
-						"Tracking: " + targetName
-				)
-		);
-		evt.getItem().setItemMeta( meta );
+		ManHunt.updateCompassMeta( evt.getItem(), targetName );
 
 		// finalize
 		evt.getPlayer().sendActionBar("Target changed to " + targetName );
