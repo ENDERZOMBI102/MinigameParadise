@@ -1,8 +1,9 @@
 package com.enderzombi102.MinigameParadise;
 
-import java.util.ArrayList;
-
+import com.enderzombi102.MinigameParadise.commands.CommandListPlayers;
+import com.enderzombi102.MinigameParadise.commands.CommandMode;
 import com.enderzombi102.MinigameParadise.generalListeners.PlayerEventListener;
+import com.enderzombi102.MinigameParadise.modes.ModeBase;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -11,11 +12,9 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
-
-import com.enderzombi102.MinigameParadise.commands.CommandListPlayers;
-import com.enderzombi102.MinigameParadise.commands.CommandMode;
-import com.enderzombi102.MinigameParadise.modes.ModeBase;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
 
 public class MinigameParadise extends JavaPlugin {
 	public static MinigameParadise instance;
