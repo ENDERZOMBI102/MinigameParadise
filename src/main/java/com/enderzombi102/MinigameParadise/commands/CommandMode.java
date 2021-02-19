@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.enderzombi102.MinigameParadise.modes.chunkeffect.ChunkEffect;
 import com.enderzombi102.MinigameParadise.modes.dropcalipse.Dropcalipse;
 import com.enderzombi102.MinigameParadise.modes.explodingcursor.ExplodingCursor;
 import com.enderzombi102.MinigameParadise.modes.manhunt.ManHunt;
@@ -110,6 +111,10 @@ public class CommandMode implements TabExecutor {
 					if ( checkMode(Tagged.class) ) return false;
 					MinigameParadise.activeModes.add( new Tagged() );
 					return true;
+				case "chunkeffect":
+					if ( checkMode(ChunkEffect.class) ) return false;
+					MinigameParadise.activeModes.add( new ChunkEffect() );
+					return true;
 				default:
 					return false;
 			}
@@ -193,6 +198,13 @@ public class CommandMode implements TabExecutor {
 				}
 				stopMode( Tagged.class );
 				return true;
+			case "chunkeffect":
+				if (! checkMode(ChunkEffect.class) ) {
+					sender.sendMessage(ChatColor.RED + "ERROR: Mode \"Tagged\" is not active.");
+					return false;
+				}
+				stopMode( ChunkEffect.class );
+				return true;
 			default:
 				return false;
 		}
@@ -232,6 +244,7 @@ public class CommandMode implements TabExecutor {
 				builder.append(" <usePearls>");
 				break;
 			case "tagged":
+			case "chunkeffect":
 				break;
 			default:
 				return false;
@@ -261,6 +274,7 @@ public class CommandMode implements TabExecutor {
 					comp.add("manhunt");
 					comp.add("teletimer");
 					comp.add("tagged");
+					comp.add("chunkeffect");
 					if ( args[0].equals("start") ) {
 						for (ModeBase mode : MinigameParadise.activeModes) {
 							comp.remove(mode.getClass().getSimpleName().toLowerCase());
