@@ -92,7 +92,6 @@ public class CommandMode implements TabExecutor {
 						sender.sendMessage(ChatColor.RED + "ERROR: Missing hunted players names!");
 						return false;
 					}
-					sender.sendMessage( Arrays.toString(targets) );
 					try {
 						MinigameParadise.activeModes.add(
 								new ManHunt( targets, deathSpectator, giveCompassOnRespawn, sender )
