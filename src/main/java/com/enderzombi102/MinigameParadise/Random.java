@@ -31,6 +31,10 @@ public class Random {
 		return list.get( random.nextInt( list.size() - 1) );
 	}
 
+	public static <E> E randomEntry(E[] list) {
+		return list[ random.nextInt( list.length - 1) ];
+	}
+
 	public static void regenerateRandomizer() {
 		random = new java.util.Random();
 	}
