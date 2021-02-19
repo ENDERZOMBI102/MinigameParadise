@@ -2,6 +2,7 @@ package com.enderzombi102.MinigameParadise.generalListeners;
 
 import com.enderzombi102.MinigameParadise.Util;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
@@ -37,9 +38,11 @@ public class BlockRestorerListener implements Listener {
 
 	@EventHandler
 	public void onBlockExplode(BlockExplodeEvent evt) {
-		Location location = evt.getBlock().getLocation();
-		if (! blocks.containsKey(location) ) {
-			blocks.put( location, evt.getBlock().getBlockData() );
+		for (Block block : evt.blockList() ) {
+			Location location = block.getLocation();
+			if (! blocks.containsKey(location) ) {
+				blocks.put( location, block.getBlockData() );
+			}
 		}
 	}
 
