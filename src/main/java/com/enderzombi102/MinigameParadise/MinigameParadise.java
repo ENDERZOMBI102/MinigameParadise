@@ -4,6 +4,8 @@ import com.enderzombi102.MinigameParadise.commands.CommandListPlayers;
 import com.enderzombi102.MinigameParadise.commands.CommandMode;
 import com.enderzombi102.MinigameParadise.generalListeners.PlayerEventListener;
 import com.enderzombi102.MinigameParadise.modes.ModeBase;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
@@ -17,13 +19,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 
 public class MinigameParadise extends JavaPlugin {
+
 	public static MinigameParadise instance;
-	public static ArrayList<ModeBase> activeModes = new ArrayList<>();
-	public static String version = "1.0.0";
+	public static Logger logger;
+	public static final ArrayList<ModeBase> activeModes = new ArrayList<>();
+	public static final String version = "1.0.0";
 	public static boolean editWorld;
+
 	public MinigameParadise() {
 		super();
-		MinigameParadise.instance = this;
+		instance = this;
+		logger = LogManager.getLogger("Minigame Paradise");
 	}
 	
 	@Override
@@ -36,7 +42,7 @@ public class MinigameParadise extends JavaPlugin {
 	// Fired when plugin is enabled
 	@Override
     public void onEnable() {
-		LogHelper.Info("loading MinigameParadise v"+version+"!" );
+		logger.info("loading MinigameParadise v" + version + "!" );
 		this.getCommand("mode").setExecutor( new CommandMode() );
 		this.getCommand("listplayers").setExecutor( new CommandListPlayers() );
 		Bukkit.getServer().getCommandMap().register("mgp", new Command("kit") {
@@ -76,7 +82,7 @@ public class MinigameParadise extends JavaPlugin {
 			}
 		});
 		Bukkit.getPluginManager().registerEvents( new PlayerEventListener(), this );
-		LogHelper.Info("finished loading MinigameParadise!");
+		logger.info("finished loading MinigameParadise!");
     }
 	
     // Fired when plugin is disabled
