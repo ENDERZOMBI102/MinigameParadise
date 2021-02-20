@@ -28,8 +28,10 @@ public class Tagged extends ModeBase {
 	public void stop() {
 		HandlerList.unregisterAll(this.listener);
 		Tagged.instance = null;
+
 		for ( Player player : Bukkit.getOnlinePlayers() ) {
 			player.setHealthScale(1.0);
+			logger.debug("resetted " + player.getName() + "'s healthscale to 1.0");
 		}
 		MinigameParadise.activeModes.remove(this);
 	}
