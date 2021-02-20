@@ -27,7 +27,7 @@ class TntWorldListener implements Listener {
 		// check if the player is present in the hashmap
 		if ( playerTntCountdown.containsKey( player.getUniqueId() ) ) {
 			// it is, do corrisponding action
-			if ( playerTntCountdown.get( player.getUniqueId() ) > 3 ) {
+			if ( playerTntCountdown.get( player.getUniqueId() ) > 5 ) {
 				player.getLocation().getWorld().spawn( evt.getFrom(), TNTPrimed.class );
 				playerTntCountdown.put( player.getUniqueId(), 0 );
 			} else {
