@@ -1,7 +1,7 @@
 package com.enderzombi102.MinigameParadise.modes.manhunt;
 
 import com.destroystokyo.paper.event.player.PlayerPostRespawnEvent;
-import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,56 +11,71 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.CompassMeta;
 
-import java.util.UUID;
 
 class ManHuntListener implements Listener {
 
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent evt) {
-		if ( ManHunt.instance.targets.contains( evt.getPlayer().getUniqueId() ) ) {
-			for ( Player player : Bukkit.getOnlinePlayers() ) {
-				if (! ManHunt.instance.targets.contains( player.getUniqueId() ) ) {
-					// set the compass only if the player that caused the event was being targeted by this player
-					if ( ManHunt.instance.playerTargets.get( player.getUniqueId() ) == evt.getPlayer().getUniqueId() ) {
-						player.setCompassTarget(evt.getTo());
+		// is the player hunted?
+		if ( ManHunt.instance.targets.contains( evt.getPlayer() ) ) {
+			ManHunt.instance.playerTargets.forEach( (hunter, target) -> {
+				// does this hunter hunt this player?
+				if ( target == evt.getPlayer() ) {
+					// is the hunter is the same dimension as the player?
+					if ( target.getWorld() == hunter.getWorld() ) {
+						// as we don't know where the compass is, try to find it
+						for ( ItemStack stack : hunter.getInventory() ) {
+							// its a compass?
+							if ( stack.getType() != Material.COMPASS ) continue;
+							// its the tracker compass?
+							if (! stack.getItemMeta().getDisplayName().equals("Tracking Compass") ) continue;
+
+							// update it
+							ManHunt.updateCompassMeta( stack, target.getLocation() );
+						}
 					}
 				}
-			}
+			});
 		}
 	}
 
 	@EventHandler
 	public void onEntityDamage(EntityDamageEvent evt) {
-		if ( ManHunt.instance.deathSpectator ) {
-			if (evt.getEntity() instanceof Player) {
-				Player player = (Player) evt.getEntity();
-				if ( ManHunt.instance.targets.contains( player.getUniqueId() ) ) {
-					// put a target into spectator mode as he died
-					if (evt.getFinalDamage() >= player.getHealth()) {
+		// is the entity a player?
+		if ( evt.getEntity() instanceof Player ) {
+			Player damaged = (Player) evt.getEntity();
+			if ( ManHunt.instance.targets.contains(damaged) ) {
+				// this damage would kill him?
+				if ( evt.getFinalDamage() >= damaged.getHealth() ) {
+					// if deathSpectator is true, put a target into spectator mode as he died
+					if ( ManHunt.instance.deathSpectator ) {
+						// "kill" the hunted
 						evt.setCancelled(true);
-						player.setGameMode(GameMode.SPECTATOR);
-						player.getInventory().clear();
-						player.closeInventory(InventoryCloseEvent.Reason.DEATH);
+						damaged.closeInventory(InventoryCloseEvent.Reason.DEATH);
+						damaged.getInventory().clear();
+						damaged.setGameMode(GameMode.SPECTATOR);
+					}
+					ManHunt.instance.targets.remove(damaged);
 
-						// TODO: does this work?
-						// if there is more targets target another player
-						int newTarget = ManHunt.instance.targets.indexOf( player.getUniqueId() ) + 1;
-						ManHunt.instance.targets.remove( player.getUniqueId() );
-						if ( newTarget >= ManHunt.instance.targets.size() ) newTarget -= 2;
-						if ( newTarget <= 0 ) newTarget = 0;
-						if ( ManHunt.instance.targets.get(newTarget) != null) {
-							for ( UUID key : ManHunt.instance.playerTargets.keySet() ) {
-								if ( ManHunt.instance.playerTargets.get(key) == player.getUniqueId() ) {
-									ManHunt.instance.playerTargets.put(key, ManHunt.instance.targets.get(newTarget) );
-								}
+					// if there is more hunted players alive, target another hunted player
+					if ( ManHunt.instance.targets.size() > 0 ) {
+						// cycle in the hunters
+						for (Player hunter : ManHunt.instance.playerTargets.keySet()) {
+							// update only the hunters who targeted this player
+							if (ManHunt.instance.playerTargets.get(hunter) == damaged) {
+								// update their target to the first hunted player
+								ManHunt.instance.playerTargets.put( hunter, ManHunt.instance.targets.get(0) );
 							}
 						}
-
-						// check if every player is dead
-						ManHunt.instance.checkFinish();
 					}
+					// check if every damaged is dead
+					ManHunt.instance.checkFinish();
 				}
 			}
 		}
@@ -69,7 +84,8 @@ class ManHuntListener implements Listener {
 	@EventHandler
 	public void onPlayerDeath(PlayerPostRespawnEvent evt) {
 		if (ManHunt.instance.giveCompassOnRespawn) {
-			if (! ManHunt.instance.targets.contains( evt.getPlayer().getUniqueId() ) ) {
+			// on respawn, give the hunter another compass
+			if (! ManHunt.instance.targets.contains( evt.getPlayer() ) ) {
 				ManHunt.instance.giveCompass( evt.getPlayer() );
 			}
 		}
@@ -77,37 +93,61 @@ class ManHuntListener implements Listener {
 
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent evt) {
-		// TODO: check with other 2 players if this work
-		// action check
+		final ItemStack stack = evt.getItem();
+		// action check: is the player right clicking?
 		if (! ( evt.getAction() == Action.RIGHT_CLICK_AIR || evt.getAction() == Action.RIGHT_CLICK_BLOCK ) ) return;
-		// compass check
-		if ( evt.getItem() == null || evt.getItem().getType() != Material.COMPASS )  return;
-		if (! evt.getItem().getItemMeta().getDisplayName().equals("Tracker Compass") ) return;
-		// targets check
+		// compass check: is the player holding the tracker compass?
+		if ( stack == null || stack.getType() != Material.COMPASS )  return;
+		if (! stack.getItemMeta().getDisplayName().equals("Tracking Compass") ) return;
+		// target check: is the player a target?
+		if ( ManHunt.instance.targets.contains( evt.getPlayer() ) ) return;
+		// targets check: there are more hunted players?
 		if ( ManHunt.instance.targets.size() == 1 ) return;
 
-		final UUID player = evt.getPlayer().getUniqueId();
-		// target check
-//		if ( ManHunt.instance.targets.contains(player) ) return;
+		final Player hunter = evt.getPlayer();
+		Player target = ManHunt.instance.playerTargets.get(hunter);
+		final int huntedSize = ManHunt.instance.targets.size();
 
-		UUID target = ManHunt.instance.playerTargets.get(player);
-		int index = ManHunt.instance.targets.indexOf(target) + 1;
+		if ( hunter.isSneaking() ) {
+			// cycle in the hunted players
 
-		if ( index > ManHunt.instance.targets.size() - 1) {
-			// check if there's only one target, if so return as we can't cycle
-			if ( ManHunt.instance.targets.size() == 1 ) return;
-			index = 0;
+			int index = ManHunt.instance.targets.indexOf(target) + 1;
+
+			if (index > huntedSize) {
+				index = 0;
+			}
+
+			target = ManHunt.instance.targets.get(index);
+
+			// update hunter
+			ManHunt.instance.playerTargets.put(hunter, target);
+			hunter.sendActionBar( "Now targeting " + target.getDisplayName() );
+			ManHunt.updateCompassMeta( stack, target.getDisplayName() );
+		} else {
+			// check if the compass can track the hunted player
+			if ( target.getWorld() != hunter.getWorld() ) {
+				target.sendActionBar( ChatColor.RED + "Can't track player" );
+			} else {
+				// update location
+				ManHunt.updateCompassMeta( stack, target.getLocation() );
+			}
 		}
-
-		target = ManHunt.instance.targets.get(index);
-		final String targetName = Bukkit.getPlayer(target).getName();
-
-		// update metadata
-		ManHunt.updateCompassMeta( evt.getItem(), targetName );
-
-		// finalize
-		evt.getPlayer().sendActionBar("Target changed to " + targetName );
-		ManHunt.instance.playerTargets.put( player, target );
-
 	}
+
+	@EventHandler
+	public void onPlayerQuit(PlayerQuitEvent evt) {
+		// put its target to null, as if their target moves it'll cause a NullPointerException
+		ManHunt.instance.playerTargets.put( evt.getPlayer(), null );
+	}
+
+	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent evt) {
+		// if a player joined, and we already have him in the playerTargets list, set their
+		// target to the first hunted player
+		ManHunt.instance.playerTargets.computeIfPresent(
+				evt.getPlayer(),
+				(hunter, hunted) -> ManHunt.instance.playerTargets.put( evt.getPlayer(), ManHunt.instance.targets.get(0) )
+		);
+	}
+
 }
