@@ -8,7 +8,7 @@ import com.enderzombi102.MinigameParadise.modes.chunkeffect.ChunkEffect;
 import com.enderzombi102.MinigameParadise.modes.dropcalipse.Dropcalipse;
 import com.enderzombi102.MinigameParadise.modes.explodingcursor.ExplodingCursor;
 import com.enderzombi102.MinigameParadise.modes.manhunt.ManHunt;
-import com.enderzombi102.MinigameParadise.modes.manhunt.ModeStartAbortException;
+import com.enderzombi102.MinigameParadise.modes.ModeStartAbortException;
 import com.enderzombi102.MinigameParadise.modes.mobcalipse.Mobcalipse;
 import com.enderzombi102.MinigameParadise.modes.tagged.Tagged;
 import com.enderzombi102.MinigameParadise.modes.teletimer.TeleTimer;
