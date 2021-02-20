@@ -1,5 +1,6 @@
 package com.enderzombi102.MinigameParadise.modes.tagged;
 
+import com.enderzombi102.MinigameParadise.MinigameParadise;
 import com.enderzombi102.MinigameParadise.Util;
 import com.enderzombi102.MinigameParadise.modes.ModeBase;
 import org.bukkit.Bukkit;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 public class Tagged extends ModeBase {
 
 	static Tagged instance;
-	public TaggedListener listener = new TaggedListener();;
+	public TaggedListener listener = new TaggedListener();
 	public final ArrayList<Player> alivePlayers = new ArrayList<>( Bukkit.getOnlinePlayers() );
 	public final ArrayList<Player> deadPlayers = new ArrayList<>();
 
@@ -27,6 +28,10 @@ public class Tagged extends ModeBase {
 	public void stop() {
 		HandlerList.unregisterAll(this.listener);
 		Tagged.instance = null;
+		for ( Player player : Bukkit.getOnlinePlayers() ) {
+			player.setHealthScale(1.0);
+		}
+		MinigameParadise.activeModes.remove(this);
 	}
 
 	public void checkWin() {
@@ -69,6 +74,6 @@ public class Tagged extends ModeBase {
 		broadcastPrefixedMessage("Winner: " + winner);
 		broadcastPrefixedMessage("Last: " + looser);
 		broadcastPrefixedMessage("Players points:\n" + builder.toString() );
-
+		this.stop();
 	}
 }
