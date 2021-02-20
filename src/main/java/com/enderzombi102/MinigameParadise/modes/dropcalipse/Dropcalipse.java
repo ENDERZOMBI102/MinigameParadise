@@ -49,22 +49,4 @@ public class Dropcalipse extends ModeBase {
 	public void stop() {
 		HandlerList.unregisterAll(this.listener);
 	}
-
-	private static class DropcalipseListener implements Listener {
-
-		@EventHandler
-		public void OnBlockDrop(BlockDropItemEvent evt) {
-			for (Item item : evt.getItems()) {
-				Bukkit.broadcastMessage(item.getItemStack().toString());
-				item.setItemStack( Dropcalipse.instance.randomize(item) );
-			}
-		}
-
-		@EventHandler
-		public void OnEntityDrop(EntityDropItemEvent evt) {
-			Bukkit.broadcastMessage(evt.getItemDrop().getItemStack().toString());
-			ItemStack drop = Dropcalipse.instance.randomize( evt.getItemDrop() );
-			evt.getItemDrop().setItemStack( drop );
-		}
-	}
 }

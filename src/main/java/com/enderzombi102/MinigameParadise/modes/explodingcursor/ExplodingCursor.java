@@ -24,11 +24,4 @@ public class ExplodingCursor extends ModeBase {
 		HandlerList.unregisterAll( this.listener );
 	}
 
-	private static class ExplodingCursorListener implements Listener {
-
-		@EventHandler
-		public void onPlayerRaycastHit(PlayerRaycastHitEvent evt) {
-			evt.getHitResult().getWorld().createExplosion( evt.getHitResult().getLocation(), 5 );
-		}
-	}
 }
