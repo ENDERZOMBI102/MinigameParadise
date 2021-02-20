@@ -6,7 +6,7 @@ import org.bukkit.Bukkit;
 
 public abstract class ModeBase {
 
-	protected Logger logger = LogManager.getLogger( getClass().getSimpleName() );
+	public Logger logger = LogManager.getLogger( getClass().getSimpleName() );
 
 	protected void broadcastPrefixedMessage(String text) {
 		Bukkit.getServer().broadcastMessage("["+this.getClass().getSimpleName()+"] "+text);

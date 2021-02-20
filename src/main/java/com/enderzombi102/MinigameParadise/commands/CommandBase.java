@@ -13,7 +13,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 
-import com.enderzombi102.MinigameParadise.LogHelper;
 import com.enderzombi102.MinigameParadise.MinigameParadise;
 import com.google.common.base.Functions;
 import com.google.common.collect.Iterables;
@@ -106,7 +105,7 @@ public abstract class CommandBase extends Command {
 				sender.sendMessage( ChatColor.RED + Arrays.toString( e.getStackTrace() ) );
 			}
 			// log the exception
-			LogHelper.Error("Captured exception while executing " + this.getClass().getSimpleName() + ".\n" + e.getStackTrace() );
+			MinigameParadise.logger.error("Captured exception while executing " + this.getClass().getSimpleName() + ".\n" + e.getStackTrace() );
 		}
 		// let spigot handle the rest
 		return true;

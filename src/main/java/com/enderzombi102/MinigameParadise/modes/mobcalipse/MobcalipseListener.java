@@ -24,7 +24,10 @@ class MobcalipseListener implements Listener {
 
 	@EventHandler
 	public void OnPlayerSleep(PlayerBedLeaveEvent evt) {
-		if ( Random.possibility(1) ) evt.getBed().breakNaturally();
+		if ( Random.possibility(1) ) {
+			evt.getBed().breakNaturally();
+			Mobcalipse.instance.logger.info("");
+		}
 	}
 
 	@EventHandler
