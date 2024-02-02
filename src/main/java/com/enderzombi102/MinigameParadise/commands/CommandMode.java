@@ -80,7 +80,7 @@ public class CommandMode implements TabExecutor {
 					MinigameParadise.activeModes.add( new TntWorld() );
 					return true;
 				case "explodingcursor":
-					if (checkMode(ExplodingCursor.class)) return false;
+					if ( checkMode( ExplodingCursor.class ) ) return false;
 					MinigameParadise.activeModes.add( new ExplodingCursor() );
 					return true;
 				case "manhunt":

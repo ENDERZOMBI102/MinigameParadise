@@ -16,6 +16,8 @@ import org.bukkit.inventory.meta.CompassMeta;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class ManHunt extends ModeBase {
 
@@ -26,6 +28,7 @@ public class ManHunt extends ModeBase {
 	final boolean giveCompassOnRespawn;
 	private final Location startPoint;
 	public ManHuntListener listener;
+	final ArrayList<ManHuntPlayer> players = new ArrayList<>();
 
 	public ManHunt(String[] targets, boolean deathSpectator, boolean giveCompassOnRespawn, CommandSender sender) throws ModeStartAbortException {
 		final boolean debug = true;
@@ -60,7 +63,7 @@ public class ManHunt extends ModeBase {
 
 		// give every player an initial target and the Tracking Compass
 		for ( Player player : Bukkit.getOnlinePlayers() ) {
-			if ( (! ManHunt.instance.targets.contains( player ) ) || debug ) {
+			if (! ManHunt.instance.targets.contains( player ) ) {
 				this.playerTargets.put( player, this.targets.get(0) );
 				this.giveCompass( player );
 			}
@@ -94,29 +97,43 @@ public class ManHunt extends ModeBase {
 		ManHunt.instance = null;
 	}
 
-	public void checkFinish() {
-		for (Player target : ManHunt.instance.targets ) {
-			if ( target.getGameMode() == GameMode.SURVIVAL ) {
-				return;
+	public ArrayList<Hunter> getHunters() {
+		ArrayList<Hunter> list = new ArrayList<>();
+		for (ManHuntPlayer player : players) {
+			if (player instanceof Hunter) {
+				list.add( (Hunter) player);
 			}
 		}
-		// if reaches here, we're finished
-		this.stop();
-		MinigameParadise.activeModes.remove(this);
+		return list;
 	}
 
-	public void giveCompass(Player player) {
-		// get the stack
-		ItemStack stack = new ItemStack(Material.COMPASS);
-		updateCompassMeta(
-				stack,
-				this.playerTargets.get( player ).getName()
-		);
-		updateCompassMeta(
-				stack,
-				this.playerTargets.get( player ).getLocation()
-		);
-		player.getInventory().addItem( stack );
+	public ArrayList<Hunted> getPreys() {
+		return getPreys(false);
+	}
+
+	public ArrayList<Hunted> getPreys(boolean mustBeAlive) {
+		ArrayList<Hunted> list = new ArrayList<>();
+		for (ManHuntPlayer player : players) {
+			if (! (player instanceof Hunter ) ) {
+				if (! ( mustBeAlive && player.isAlive ) ) continue;
+				list.add( (Hunted) player);
+			}
+		}
+		return list;
+	}
+
+	public boolean allPreyDead() {
+		return ManHunt.instance.players
+				.stream()
+				.noneMatch( player -> player instanceof Hunted && player.isAlive );
+	}
+
+	public void checkFinish() {
+		if ( allPreyDead() ) {
+			// if reaches here, we're finished
+			this.stop();
+			MinigameParadise.activeModes.remove(this);
+		}
 	}
 
 	static void updateCompassMeta(ItemStack stack, String target) {
